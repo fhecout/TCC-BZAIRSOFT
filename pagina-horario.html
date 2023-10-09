@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code PIX</title>
+</head>
+<body>
+    <div class="idHorario"> ID do Horario: </div>
+    <img class="qrcode" src="https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=00.00&saida=qr" alt="QR Code PIX">
+
+    <div id="conteudo">
+        <!-- Conteúdo da URL será inserido aqui -->
+    </div>
+    <button id="copiarBotao">Copiar QRCode</button>
+    <br>
+    <div class="valor"></div>
+
+
+    
+    <input type="checkbox">Aceite os<a href="termos.html">Termos de Compromisso</a>
+    <button>Agendar Horario</button>
+
+    <style>
+        #conteudo {
+            font-size: 0px;
+        }
+
+        .qrcode {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    
+        .idHorario {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            font-size: 25px;
+        }
+
+
+
+    </style>
+</body>
+</html>

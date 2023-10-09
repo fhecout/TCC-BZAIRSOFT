@@ -1,0 +1,47 @@
+#premium {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards {
+    display: flex;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 500px;
+    border: 1px solid #ff7300;
+    border-radius: 15px;
+    margin: 30px;
+    transition: transform .5s ease;
+    color: #fff;
+}   
+
+.plano-basico, .plano-premium {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 35px;
+}
+
+.basico {
+    background: url(../images/basico.jpg) no-repeat center/cover;
+    filter: grayscale(100%);
+}
+
+.premium {
+    background: url(../images/premium.jpg) no-repeat center/cover;
+    filter: grayscale(100%);
+}
+
+.card:hover {
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
+
