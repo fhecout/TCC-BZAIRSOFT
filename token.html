@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Validação de Token</title>
+</head>
+<body>
+    <h1>Validação de Token</h1>
+    <form action="/codigoValidacao" method="post">
+        <label for="codigoValidacao">codigoValidacao</label>
+        <input type="text" id="codigoValidacao" name="codigoValidacao" required><br><br>
+        <input type="hidden" id="username" name="username" value="<%= username %>">
+        <input type="submit" value="Validar codigoValidacao">
+    </form>
+
+    <script>
+        // Obtém o valor do parâmetro 'username' da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        
+    
+        // Use o valor do username por exemplo, exibindo na página
+        const usernameDisplay = document.createElement('p');
+        usernameDisplay.textContent = `Token para o usuário: ${username}`;
+        document.body.appendChild(usernameDisplay);
+
+        document.getElementById('username').value = username;
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.cabecalho {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    background-color: #292929;
+    border-bottom: 1px solid #FF7300;
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+}

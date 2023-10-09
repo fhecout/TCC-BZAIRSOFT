@@ -1,0 +1,23 @@
+#contato {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+.conteudo-contato {
+    display: flex;
+    align-items: center;
+    gap: 25PX;
+}
+.infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.infos .social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
