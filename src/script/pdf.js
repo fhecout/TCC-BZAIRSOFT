@@ -35,7 +35,7 @@ async function generatePDF(results) {
         let cellText;
         if (i === 0) {
           // Diminuir a célula de ID
-          cellText = result.id.toString().substring(0, 8); 
+          cellText = result.id.toString().substring(0, 8);
         } else if (i === 3) {
           // Aumentar a célula de email
           cellText = result.email + ' '.repeat(100);

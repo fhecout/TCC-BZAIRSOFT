@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 const { enviarEmailComToken } = require('../script/email');
 
 function VerificaCadastro(cpf, username) {
-    return new Promise((resolve, reject ) => {
+    return new Promise((resolve, reject) => {
         const query = 'SELECT CPF, email FROM usuarios WHERE (cpf = $1 OR email = $2)';
-        
+
         bd.query(query, [cpf, username], (err, res) => {
             if (err) {
-                reject (err);
+                reject(err);
             } else {
-                resolve (res.rowCount > 0)
+                resolve(res.rowCount > 0)
             }
         });
     });
@@ -18,46 +18,46 @@ function VerificaCadastro(cpf, username) {
 
 
 function VerificaEmail(username) {
-    return new Promise((resolve, reject ) => {
+    return new Promise((resolve, reject) => {
         const query = 'SELECT email FROM usuarios WHERE (email = $1)';
-        
+
         bd.query(query, [username], (err, res) => {
             if (err) {
-                reject (err);
+                reject(err);
             } else {
-                resolve (res.rowCount > 0)
+                resolve(res.rowCount > 0)
                 console.log(username)
             }
         });
     });
 }
 
-async function cadastrarUsuario(username, cpf, senha, nome) {
+async function cadastrarUsuario(username, cpf, senha, nome, telefone) {
     try {
-      const cadastroRegistrado = await VerificaCadastro(cpf, username);
-  
-      if (cadastroRegistrado) {
-        throw new Error('CPF ou email já cadastrado');
-      }
-  
-      const inserirCadastro = 'INSERT INTO Usuarios (email,senha,nome, cpf) VALUES ($1,$2,$3,$4)';
-bd.query(inserirCadastro, [username, cpf, senha, nome], (err, res) => {
-  if (err) {
-    console.error('Erro ao cadastrar usuário:', err);
-  } else {
-    console.log('Usuário cadastrado com sucesso');
+        const cadastroRegistrado = await VerificaCadastro(cpf, username);
 
-    const codigoValidacao = Math.floor(Math.random() * (99999 - 1000 + 1)) + 1000;
-    console.log(codigoValidacao);
-  
-    const incluirTokenQuery = 'UPDATE USUARIOS SET tokenUser = $1 WHERE email = $2';
+        if (cadastroRegistrado) {
+            throw new Error('CPF ou email já cadastrado');
+        }
+
+        const inserirCadastro = 'INSERT INTO Usuarios (email,senha,nome, cpf, telefone) VALUES ($1,$2,$3,$4,$5)';
+        bd.query(inserirCadastro, [username, cpf, senha, nome, telefone], (err, res) => {
+            if (err) {
+                console.error('Erro ao cadastrar usuário:', err);
+            } else {
+                console.log('Usuário cadastrado com sucesso');
+
+                const codigoValidacao = Math.floor(Math.random() * (99999 - 1000 + 1)) + 1000;
+                console.log(codigoValidacao);
+
+                const incluirTokenQuery = 'UPDATE USUARIOS SET tokenUser = $1 WHERE email = $2';
                 bd.query(incluirTokenQuery, [codigoValidacao.toString(), username], (err, res) => {
                     if (err) {
                         console.error('Erro ao inserir token no banco de dados:', err);
                     } else {
                         console.log('Token inserido com sucesso');
-                        
-  
+
+
                         // Envia o email com o token para o usuário
                         enviarEmailComToken(username, codigoValidacao); // Use a variável 'token' aqui
                         return username;
@@ -70,8 +70,8 @@ bd.query(inserirCadastro, [username, cpf, senha, nome], (err, res) => {
     }
 }
 
-    module.exports = {
-        VerificaCadastro,
-        cadastrarUsuario,
-        VerificaEmail
-    };
+module.exports = {
+    VerificaCadastro,
+    cadastrarUsuario,
+    VerificaEmail
+};

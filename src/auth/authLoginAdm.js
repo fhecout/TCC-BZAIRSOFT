@@ -16,4 +16,4 @@ function verificaAdministrador(username, senha) {
   });
 }
 
-module.exports = {verificaAdministrador};
+module.exports = { verificaAdministrador };

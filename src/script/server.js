@@ -2,10 +2,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
-const {verificarUsuario, verificaSenha } = require('../auth/authlogin');
-const {VerificaCadastro, cadastrarUsuario, VerificaEmail} = require('../auth/authCadastro');
-const {VerificaCodigoValidacao} = require('../auth/authtoken');
-const {enviarSenha} = require('./email');
+const { verificarUsuario, verificaSenha } = require('../auth/authlogin');
+const { VerificaCadastro, cadastrarUsuario, VerificaEmail } = require('../auth/authCadastro');
+const { VerificaCodigoValidacao } = require('../auth/authtoken');
+const { enviarSenha } = require('./email');
 const { generatePDF } = require('./pdf');
 const db = require('./bd');
 const fs = require('fs');
@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 
 function gerarToken(username) {
-  const segredo = 'BZAirsoftArenaTCC'; 
+  const segredo = 'BZAirsoftArenaTCC';
   const token = jwt.sign({ username }, segredo, { expiresIn: '1h' }); // Define um tempo de expiração para o token (1 hora)
   return token;
 }
@@ -127,16 +127,16 @@ app.get('/horarios', async (req, res) => {
 
 
 app.post('/cadastro', async (req, res) => {
-  const { username, senha, nome, cpf} = req.body;
+  const { username, senha, nome, cpf } = req.body;
   const CadastroExiste = await VerificaCadastro(cpf, username);
-    if (CadastroExiste) {
-        res.send('CPF ou Email ja foram informados')
-    }else{
-        cadastrarUsuario(username, senha,nome, cpf);
-        res.redirect(`/token.html?username=${username}`);
-      }
-    }
-  )
+  if (CadastroExiste) {
+    res.send('CPF ou Email ja foram informados')
+  } else {
+    cadastrarUsuario(username, senha, nome, cpf);
+    res.redirect(`/token.html?username=${username}`);
+  }
+}
+)
 
 
 
@@ -146,10 +146,10 @@ app.post('/cadastro', async (req, res) => {
 // Rota para processar o envio do formulário de login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-    const usuarioExiste = await verificarUsuario(username);
-    const senhaConfere = await verificaSenha(username, password);
+  const usuarioExiste = await verificarUsuario(username);
+  const senhaConfere = await verificaSenha(username, password);
   // Verificar se o usuário existe usando a função do módulo "authlogin.js"
-  if (usuarioExiste && senhaConfere)  {
+  if (usuarioExiste && senhaConfere) {
     const token = gerarToken(username); // Gera um token JWT
     res.cookie('token', token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly
     res.redirect('/horarios.html');
@@ -175,7 +175,7 @@ app.post('/esqueceuSenha', async (req, res) => {
       async function buscarSenhaNoBanco(username) {
         return new Promise((resolve, reject) => {
           const query = 'SELECT senha FROM usuarios WHERE email = $1';
-      
+
           db.query(query, [username], (err, res) => {
             if (err) {
               reject(err);
@@ -196,12 +196,12 @@ app.post('/esqueceuSenha', async (req, res) => {
 
         res.status(200).send('Email Enviado com sucesso')
 
-        } else {
-          res.status(404).send('Senha não encontrada no banco de dados.');
-        }
-          } else {
-            res.status(404).send('E-mail não encontrado no banco de dados.');
-          }
+      } else {
+        res.status(404).send('Senha não encontrada no banco de dados.');
+      }
+    } else {
+      res.status(404).send('E-mail não encontrado no banco de dados.');
+    }
   } catch (error) {
     console.error('Erro ao processar a solicitação de esqueceuSenha:', error);
     res.status(500).send('Erro ao processar a solicitação de esqueceuSenha.');
@@ -242,9 +242,9 @@ app.post('/horarios', async (req, res) => {
   const { dia } = req.body;
 
 
-if (dia === null ) {
-  res.send('/horarios.html')
-}
+  if (dia === null) {
+    res.send('/horarios.html')
+  }
 
   const result = await db.query(
     'SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=true',
@@ -279,6 +279,21 @@ app.get('/pagina-horario', (req, res) => {
           return;
         }
 
+        function formatarDataBrasileira(dataOriginal) {
+          const dia = dataOriginal.getDate().toString().padStart(2, '0'); // Dia com zero à esquerda
+          const mes = (dataOriginal.getMonth() + 1).toString().padStart(2, '0'); // Mês com zero à esquerda
+          const ano = dataOriginal.getFullYear();
+
+          return `${dia}/${mes}/${ano}`;
+        }
+
+        const dataOriginal = new Date(horario.dia);
+        const dataFormatada = formatarDataBrasileira(dataOriginal);
+
+
+
+
+
         const url = `https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=${horario.valor}&saida=br`;
 
         axios.get(url)
@@ -290,17 +305,19 @@ app.get('/pagina-horario', (req, res) => {
 
               // Substitui o marcador no HTML com o conteúdo da URL
               const novoHTML = data.replace('<!-- Conteúdo da URL será inserido aqui -->', brcode);
-              
+
               // Substitui o valor no HTML com o valor do banco de dados
               const htmlComValores = novoHTML.replace('valor=00.00', `valor=${horario.valor}`);
 
               const valor = htmlComValores.replace('<div class="valor"></div>', `<div class="valor">Valor:${horario.valor}</div>`)
-              
+
               const idHorario = valor.replace('<div class="idHorario"> ID do Horario: </div>', `<div class="idHorario"> ID do Horario:${horario.id} </div>`)
+
+              const Whatsapp = idHorario.replace('https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00', `https://wa.me//5541999575249?text=Olá,%20o%20codigo%20do%20meu%20agendamento%20é%20*${horario.id}*%20as%20${horario.horario}%20do%20Dia:%20${dataFormatada},%20segue%20meu%20comprovante%20de%20pagamento!`)
 
 
               // Envia o HTML atualizado para o cliente
-              res.send(idHorario);
+              res.send(Whatsapp);
             } else {
               console.log('Não foi possível acessar a página.');
             }
@@ -351,12 +368,12 @@ app.post('/adicionar-horario', async (req, res) => {
   try {
     const query = await db.query('select * from horarios_disponiveis where dia = $1 and horario = $2 and disp=true', [dia, horario])
     if (!query) {
-    // Insira o novo horário na tabela horarios_disponiveis
-    await db.query('INSERT INTO horarios_disponiveis (dia, horario, disp, valor) VALUES ($1, $2, true, $3)', [dia, horario, valor]);
-    await db.query('INSERT INTO log_alteracoes (acao, dia, horario, valor , data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Inclusao', dia, horario, valor]);
-  } else {
-    res.send('Horario ja esta inserido')
-  }
+      // Insira o novo horário na tabela horarios_disponiveis
+      await db.query('INSERT INTO horarios_disponiveis (dia, horario, disp, valor) VALUES ($1, $2, true, $3)', [dia, horario, valor]);
+      await db.query('INSERT INTO log_alteracoes (acao, dia, horario, valor , data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Inclusao', dia, horario, valor]);
+    } else {
+      res.send('Horario ja esta inserido')
+    }
 
     res.redirect('/adm.html'); // Redirecione de volta para a página de administração
   } catch (error) {
@@ -402,7 +419,7 @@ app.post('/gerar-relatorio', async (req, res) => {
 
 // Rota para gerar relatório em uma planilha Excel
 app.post('/gerar-relatorio-excel', async (req, res) => {
-  const { filtroInicial , filtroFinal } = req.body;
+  const { filtroInicial, filtroFinal } = req.body;
 
   try {
     const result = await db.query('SELECT * FROM horarios_disponiveis WHERE dia BETWEEN $1 AND $2', [filtroInicial, filtroFinal]);
@@ -488,7 +505,7 @@ app.post('/gerar-relatorio-log-excel', async (req, res) => {
         acao: row.acao,
         observacao: row.observacao,
         dia: row.dia.toISOString().split('T')[0], // Formato YYYY-MM-DD
-        horario: row.horario, 
+        horario: row.horario,
         data_hora: row.data_hora.toISOString(), // Formato ISO para data/hora
       });
     });
@@ -526,8 +543,8 @@ app.post('/bloquear-horario-Jogador', async (req, res) => {
       console.log('Senha válida. Antes da atualização e inserção no banco de dados.');
       const query = await db.query('select * from horarios_disponiveis where dia = $1 and horario = $2 and disp=false', [dia, horario])
       if (!query) {
-      const result = await db.query('UPDATE horarios_disponiveis SET disp = false WHERE cpf = $1 and observacao = $2 AND dia = $3 AND horario = $4', [CPF, observacao, dia, horario]);
-      await db.query('INSERT INTO log_alteracoes (acao, observacao, dia, horario, data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Bloqueio de Horário', observacao, dia, horario]);
+        const result = await db.query('UPDATE horarios_disponiveis SET disp = false WHERE cpf = $1 and observacao = $2 AND dia = $3 AND horario = $4', [CPF, observacao, dia, horario]);
+        await db.query('INSERT INTO log_alteracoes (acao, observacao, dia, horario, data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Bloqueio de Horário', observacao, dia, horario]);
       }
 
     } else {
