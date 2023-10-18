@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
 const { verificarUsuario, verificaSenha } = require('../auth/authlogin');
-const { VerificaCadastro, cadastrarUsuario, VerificaEmail } = require('../auth/authCadastro');
+const { VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken } = require('../auth/authCadastro');
 const { VerificaCodigoValidacao } = require('../auth/authtoken');
 const { enviarSenha } = require('./email');
 const { generatePDF } = require('./pdf');
@@ -15,7 +15,7 @@ const ExcelJS = require('exceljs');
 
 
 // Definindo o caminho absoluto para a pasta "TCC-BZAIRSOFT"
-const absolutePath = path.join(__dirname, '../../../TCC-BZAIRSOFT');
+const absolutePath = path.join(__dirname, '../../../TCC-BZAIRSOFT/src');
 
 // Configurando o diretório público para servir os arquivos estáticos
 app.use(express.static(absolutePath));
@@ -24,9 +24,9 @@ app.use(express.urlencoded({ extended: true })); // Middleware para tratar dados
 app.use(cookieParser());
 
 
-function gerarToken(username) {
+function gerarToken(username, cpf) {
   const segredo = 'BZAirsoftArenaTCC';
-  const token = jwt.sign({ username }, segredo, { expiresIn: '1h' }); // Define um tempo de expiração para o token (1 hora)
+  const token = jwt.sign({ username, cpf }, segredo, { expiresIn: '1h' }); // Define um tempo de expiração para o token (1 hora)
   return token;
 }
 
@@ -36,9 +36,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(absolutePath, 'index.html'));
 });
 
+
+// Rota para a página de login (login.html)
+app.get('/cadastro', (req, res) => {
+  res.sendFile(path.join(absolutePath, 'html/cadastro.html'));
+});
+
 // Rota para a página de login (login.html)
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(absolutePath, 'login.html'));
+  res.sendFile(path.join(absolutePath, 'html/login.html'));
 });
 
 // Rota para a página de teste depois do login (teste.html)
@@ -48,26 +54,22 @@ app.get('/teste', (req, res) => {
   if (!token) {
     return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
   }
-
   jwt.verify(token, 'BZAirsoftArenaTCC', (err, decoded) => { // Verifique o token
     if (err) {
       return res.redirect('/login'); // Redirecione para a página de login se o token for inválido
     }
-
     // Se o token for válido, continue com a lógica da rota protegida
-    res.sendFile(path.join(absolutePath, 'teste.html'));
+    res.sendFile(path.join(absolutePath, 'html/teste.html'));
   });
 });
 
-
-
 app.get('/codigoValidacao', (req, res) => {
   const username = req.query.username;
-  res.render(path.join(absolutePath, 'token.html'), { username, codigoValidacao });
+  res.render(path.join(absolutePath, 'html/token.html'), { username, codigoValidacao });
 });
 
 app.get('/adm', (req, res) => {
-  res.render(path.join(absolutePath, 'adm.html'));
+  res.render(path.join(absolutePath, 'html/adm.html'));
 });
 
 app.get('/gerar-pdf', async (req, res) => {
@@ -107,7 +109,10 @@ app.get('/tabela.html', (req, res) => {
 
 app.get('/horarios', async (req, res) => {
   try {
-    // Realiza a consulta no banco de dados
+    const token = req.cookies.token; // Obtenha o token do cookie
+    if (!token) {
+      return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
+    }
     const results = await db.query('SELECT id, dia, horario, disp FROM horarios_disponiveis');
     // Retorna os resultados em formato JSON
     res.json(results.rows);
@@ -133,7 +138,7 @@ app.post('/cadastro', async (req, res) => {
     res.send('CPF ou Email ja foram informados')
   } else {
     cadastrarUsuario(username, senha, nome, cpf);
-    res.redirect(`/token.html?username=${username}`);
+    res.redirect(`html/token.html?username=${username}`);
   }
 }
 )
@@ -143,21 +148,29 @@ app.post('/cadastro', async (req, res) => {
 
 
 
-// Rota para processar o envio do formulário de login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const usuarioExiste = await verificarUsuario(username);
   const senhaConfere = await verificaSenha(username, password);
-  // Verificar se o usuário existe usando a função do módulo "authlogin.js"
+
   if (usuarioExiste && senhaConfere) {
-    const token = gerarToken(username); // Gera um token JWT
-    res.cookie('token', token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly
-    res.redirect('/horarios.html');
+    const results = await db.query('SELECT tokenvalidado FROM usuarios WHERE email = $1', [username]);
+    const tokenValidado = results.rows[0].tokenvalidado;
+
+    if (tokenValidado) {
+      const token = gerarToken(username);
+      res.cookie('token', token, { httpOnly: true });
+      res.redirect('html/horarios.html');
+    } else {
+      EnviarToken(username);
+      res.redirect(`html/token.html?username=${username}`);
+    }
   } else {
-    // Caso contrário, exibir uma mensagem de erro na página de login
     res.send('Usuário inválido.');
+    
   }
 });
+
 
 
 
@@ -221,7 +234,7 @@ app.post('/codigoValidacao', async (req, res) => {
       const results = await db.query(query, [codigoValidacao, username]);
       const token = gerarToken(username); // Gera um token JWT
       res.cookie('token', token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly 
-      res.redirect('/teste.html');
+      res.redirect('html/teste.html');
     } catch (error) {
       console.error('Erro ao atualizar o tokenValidado:', error);
       res.status(500).send('Erro interno ao atualizar o tokenValidado');
@@ -243,7 +256,7 @@ app.post('/horarios', async (req, res) => {
 
 
   if (dia === null) {
-    res.send('/horarios.html')
+    res.send('html/horarios.html')
   }
 
   const result = await db.query(
@@ -273,7 +286,7 @@ app.get('/pagina-horario', (req, res) => {
       const horario = result.rows[0]; // Assume que você está pegando apenas um resultado
 
       // Lê o arquivo HTML
-      fs.readFile(path.join(absolutePath, 'pagina-horario.html'), 'utf8', (err, data) => {
+      fs.readFile(path.join(absolutePath, 'html/pagina-horario.html'), 'utf8', (err, data) => {
         if (err) {
           res.status(500).send('Erro ao ler o arquivo HTML');
           return;
@@ -331,6 +344,9 @@ app.get('/pagina-horario', (req, res) => {
       res.status(500).send('Erro ao buscar informações do horário');
     });
 });
+
+
+
 
 
 
