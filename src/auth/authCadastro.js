@@ -46,32 +46,35 @@ async function cadastrarUsuario(username, cpf, senha, nome, telefone) {
                 console.error('Erro ao cadastrar usuário:', err);
             } else {
                 console.log('Usuário cadastrado com sucesso');
-
-                const codigoValidacao = Math.floor(Math.random() * (99999 - 1000 + 1)) + 1000;
-                console.log(codigoValidacao);
-
-                const incluirTokenQuery = 'UPDATE USUARIOS SET tokenUser = $1 WHERE email = $2';
-                bd.query(incluirTokenQuery, [codigoValidacao.toString(), username], (err, res) => {
-                    if (err) {
-                        console.error('Erro ao inserir token no banco de dados:', err);
-                    } else {
-                        console.log('Token inserido com sucesso');
-
-
-                        // Envia o email com o token para o usuário
-                        enviarEmailComToken(username, codigoValidacao); // Use a variável 'token' aqui
-                        return username;
-                    }
-                });
-            }
-        });
+                EnviarToken(codigoValidacao, username)   
+            }        
+        })
     } catch (error) {
         console.error('Erro ao cadastrar usuário:', error.message);
     }
 }
 
+    function EnviarToken(username) {
+        const codigoValidacao = Math.floor(Math.random() * (99999 - 1000 + 1)) + 1000;
+        console.log(codigoValidacao)
+        const incluirTokenQuery = `UPDATE USUARIOS SET tokenUser = $1 WHERE email = $2`;
+        bd.query(incluirTokenQuery, [codigoValidacao.toString(), username], (err, res) => {
+            if (err) {
+                console.error('Erro ao inserir token no banco de dados:', err);
+            } else {
+                console.log('Token inserido com sucesso');
+
+
+                // Envia o email com o token para o usuário
+                enviarEmailComToken(username, codigoValidacao); // Use a variável 'token' aqui
+                return username;
+        }
+    })
+}
+
 module.exports = {
     VerificaCadastro,
     cadastrarUsuario,
-    VerificaEmail
+    VerificaEmail,
+    EnviarToken
 };
