@@ -2,16 +2,16 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
-const { verificarUsuario, verificaSenha } = require('../auth/authlogin');
-const { VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken } = require('../auth/authCadastro');
-const { VerificaCodigoValidacao } = require('../auth/authtoken');
-const { enviarSenha } = require('./email');
-const { generatePDF } = require('./pdf');
-const db = require('./bd');
 const fs = require('fs');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const ExcelJS = require('exceljs');
+const { verificarUsuario, verificaSenha } = require('../../auth/authLogin');
+const { VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken } = require('../../auth/authCadastro');
+const { VerificaCodigoValidacao } = require('../../auth/authToken');
+const { enviarSenha } = require('../../email/email');
+const { generatePDF } = require('../../pdfs/pdf');
+const db = require('../../db/bd');
 
 
 // Definindo o caminho absoluto para a pasta "TCC-BZAIRSOFT"
@@ -328,9 +328,10 @@ app.get('/pagina-horario', (req, res) => {
 
               const Whatsapp = idHorario.replace('https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00', `https://wa.me//5541999575249?text=Olá,%20o%20codigo%20do%20meu%20agendamento%20é%20*${horario.id}*%20as%20${horario.horario}%20do%20Dia:%20${dataFormatada},%20segue%20meu%20comprovante%20de%20pagamento!`)
 
+              const id = Whatsapp.replace('ID_DO_HORARIO_AQUI', `${horario.id}`)
 
               // Envia o HTML atualizado para o cliente
-              res.send(Whatsapp);
+              res.send(id);
             } else {
               console.log('Não foi possível acessar a página.');
             }
@@ -346,11 +347,23 @@ app.get('/pagina-horario', (req, res) => {
 });
 
 
+// Rota para bloquear um horário
+app.post('/agendar', async (req, res) => {
+  const { horarioId } = req.body; 
 
-
-
-
-
+  try {
+    const queryResult = await db.query('UPDATE horarios_disponiveis SET disp = false WHERE id = $1', [horarioId]);
+    
+    if (queryResult.rowCount > 0) {
+      res.status(200).send('Horário bloqueado com sucesso.');
+    } else {
+      res.status(404).send('Horário não encontrado. Não foi possível bloquear o horário.');
+    }
+  } catch (error) {
+    console.error('Erro ao bloquear o horário:', error);
+    res.status(500).send('Erro ao bloquear o horário.');
+  }
+});
 
 //ADMINISTRAÇÃO
 

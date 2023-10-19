@@ -1,4 +1,4 @@
-const bd = require('../script/bd');
+const bd = require('../db/bd');
 
 function VerificaCodigoValidacao(codigoValidacao, username) {
     return new Promise((resolve, reject) => {

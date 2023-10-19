@@ -1,5 +1,5 @@
 // Importa o objeto 'db' que representa a conexão com o banco de dados
-const bd = require('../script/bd');
+const bd = require('../db/bd');
 
 // Função para verificar se um usuário com o email fornecido existe no banco de dados
 function verificarUsuario(username) {

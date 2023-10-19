@@ -1,4 +1,4 @@
-const bd = require('../script/bd');
+const bd = require('../db/bd');
 
 
 function verificaAdministrador(username, senha) {

@@ -1,6 +1,6 @@
-const bd = require('../script/bd')
+const bd = require('../db/bd')
 const jwt = require('jsonwebtoken');
-const { enviarEmailComToken } = require('../script/email');
+const { enviarEmailComToken } = require('../email/email');
 
 function VerificaCadastro(cpf, username) {
     return new Promise((resolve, reject) => {
