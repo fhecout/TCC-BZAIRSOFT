@@ -47,21 +47,42 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(absolutePath, 'html/login.html'));
 });
 
+
+
+
+
 // Rota para a página de teste depois do login (teste.html)
-app.get('/teste', (req, res) => {
+app.get('/teste', async (req, res) => {
   const token = req.cookies.token; // Obtenha o token do cookie
 
   if (!token) {
     return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
   }
-  jwt.verify(token, 'BZAirsoftArenaTCC', (err, decoded) => { // Verifique o token
+  jwt.verify(token, 'BZAirsoftArenaTCC', async (err, decoded) => { // Verifique o token
     if (err) {
       return res.redirect('/login'); // Redirecione para a página de login se o token for inválido
     }
-    // Se o token for válido, continue com a lógica da rota protegida
-    res.sendFile(path.join(absolutePath, 'html/teste.html'));
+    const username = decoded.username;
+    try {
+      const results = await db.query('SELECT nome FROM usuarios WHERE email = $1', [username]);
+      const nome = results.rows[0].nome;
+      // Se o token for válido, continue com a lógica da rota protegida
+      fs.readFile(path.join(absolutePath, 'html/teste.html'), 'utf8', (err, data) => {
+        if (err) {
+          return res.status(500).send('Erro ao ler o arquivo HTML');
+        }
+        const newData = data.replace('<div class="usuario"></div>', `<div class="usuario">${nome}</div>`);
+        res.send(newData);
+      });
+    } catch (error) {
+      console.error('Erro ao buscar nome de usuário no banco de dados:', error);
+      return res.status(500).send('Erro ao buscar nome de usuário no banco de dados');
+    }
   });
 });
+
+
+
 
 app.get('/codigoValidacao', (req, res) => {
   const username = req.query.username;
@@ -113,14 +134,45 @@ app.get('/horarios', async (req, res) => {
     if (!token) {
       return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
     }
-    const results = await db.query('SELECT id, dia, horario, disp FROM horarios_disponiveis');
-    // Retorna os resultados em formato JSON
-    res.json(results.rows);
+
+    jwt.verify(token, 'BZAirsoftArenaTCC', async (err, decoded) => { // Verifique o token
+      if (err) {
+        return res.redirect('/login'); // Redirecione para a página de login se o token for inválido
+      }
+
+      const username = decoded.username;
+      try {
+        const userResult = await db.query('SELECT nome FROM usuarios WHERE email = $1', [username]);
+        const nome = userResult.rows[0].nome;
+
+        const horariosResult = await db.query('SELECT id, dia, horario, disp FROM horarios_disponiveis');
+        const horarios = horariosResult.rows;
+
+        const responseData = {
+          usuario: nome,
+          horarios: horarios
+        };
+
+        // Lendo o arquivo HTML
+        fs.readFile(path.join(absolutePath, 'html/teste.html'), 'utf8', (err, data) => {
+          if (err) {
+            return res.status(500).send('Erro ao ler o arquivo HTML');
+          }
+          const newData = data.replace('<div class="usuario"></div>', `<div class="usuario">${nome}</div>`);
+          // Envia a resposta com o HTML atualizado
+          res.send(newData);
+        });
+      } catch (error) {
+        console.error('Erro na consulta ao banco de dados:', error);
+        res.status(500).json({ error: 'Erro ao buscar horários ou nome de usuário' });
+      }
+    });
   } catch (error) {
-    console.error('Erro na consulta ao banco de dados:', error);
-    res.status(500).json({ error: 'Erro ao buscar horários' });
+    console.error('Erro ao verificar o token:', error);
+    res.status(500).json({ error: 'Erro ao verificar o token' });
   }
 });
+
 
 
 
@@ -167,7 +219,6 @@ app.post('/login', async (req, res) => {
     }
   } else {
     res.send('Usuário inválido.');
-    
   }
 });
 
@@ -355,7 +406,7 @@ app.post('/agendar', async (req, res) => {
     const queryResult = await db.query('UPDATE horarios_disponiveis SET disp = false WHERE id = $1', [horarioId]);
     
     if (queryResult.rowCount > 0) {
-      res.status(200).send('Horário bloqueado com sucesso.');
+      res.redirect(`/pagina-horario?id=${horarioId}`);
     } else {
       res.status(404).send('Horário não encontrado. Não foi possível bloquear o horário.');
     }
@@ -364,6 +415,107 @@ app.post('/agendar', async (req, res) => {
     res.status(500).send('Erro ao bloquear o horário.');
   }
 });
+
+
+
+
+// Rota para a página de perfil do usuário
+app.get('/perfil', async (req, res) => {
+  const token = req.cookies.token; // Obtenha o token do cookie
+
+  if (!token) {
+    return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
+  }
+  jwt.verify(token, 'BZAirsoftArenaTCC', async (err, decoded) => { // Verifique o token
+    if (err) {
+      return res.redirect('/login'); // Redirecione para a página de login se o token for inválido
+    }
+    const username = decoded.username;
+    try {
+      const results = await db.query('SELECT nome, email, telefone, cpf FROM usuarios WHERE email = $1', [username]);
+      const { nome, email, telefone, cpf } = results.rows[0];
+
+      // Se o token for válido, continue com a lógica da rota protegida
+      fs.readFile(path.join(absolutePath, 'html/perfil.html'), 'utf8', (err, data) => {
+        if (err) {
+          return res.status(500).send('Erro ao ler o arquivo HTML');
+        }
+        const newData = data
+          .replace('<div class="nome"></div>', `<div class="nome">${nome}</div>`)
+          .replace('<div class="email"></div>', `<div class="email">${email}</div>`)
+          .replace('<div class="telefone"></div>', `<div class="telefone">${telefone}</div>`)
+          .replace('<div class="CPF"></div>', `<div class="CPF">${cpf}</div>`);
+        res.send(newData);
+      });
+    } catch (error) {
+      console.error('Erro ao buscar informações do usuário no banco de dados:', error);
+      return res.status(500).send('Erro ao buscar informações do usuário no banco de dados');
+    }
+  });
+});
+
+
+
+
+// Rota para atualizar as informações do usuário
+app.post('/atualizar-perfil', async (req, res) => {
+  const { nome, email, telefone, senha } = req.body;
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.redirect('/login'); // Redirecione para a página de login se o token não estiver presente
+  }
+
+  jwt.verify(token, 'BZAirsoftArenaTCC', async (err, decoded) => { // Verifique o token
+    if (err) {
+      return res.redirect('/login'); // Redirecione para a página de login se o token for inválido
+    }
+    const username = decoded.username;
+
+    
+
+    try {
+      // Verificar se a senha está correta antes de permitir a atualização
+      const senhaCorreta = await verificaSenha(username, senha);
+
+      if (senhaCorreta) {
+        const emailJaExiste = await VerificaCadastro(null, email);
+        if (emailJaExiste) {
+          return res.status(400).send('O e-mail já está em uso. Por favor, escolha outro e-mail.');
+        }
+
+
+        await db.query('UPDATE usuarios SET nome = $1, email = $2, telefone = $3 WHERE email = $4', [
+          nome,
+          email,
+          telefone,
+          username
+        ]);
+        res.redirect('/logout');
+      } else {
+        res.status(401).send('Senha incorreta. Não é possível atualizar as informações.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar as informações do usuário:', error);
+      res.status(500).send('Erro ao atualizar as informações do usuário');
+    }
+  });
+});
+
+app.get('/atualizarPerfil', (req, res) => {
+  res.sendFile(path.join(absolutePath, 'html/atualizarPerfil.html'));
+});
+
+
+
+
+
+
+
+
+
+
+
 
 //ADMINISTRAÇÃO
 
@@ -438,10 +590,6 @@ app.post('/gerar-relatorio', async (req, res) => {
     res.status(500).send('Erro ao gerar relatório.');
   }
 });
-
-
-
-
 
 
 

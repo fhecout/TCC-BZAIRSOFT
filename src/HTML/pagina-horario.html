@@ -2,29 +2,6 @@
 <html>
 <head>
     <title>QR Code PIX</title>
-</head>
-<body>
-    <div class="idHorario"> ID do Horario: </div>
-    <img class="qrcode" src="https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=00.00&saida=qr" alt="QR Code PIX">
-
-    <div id="conteudo">
-        <!-- Conteúdo da URL será inserido aqui -->
-    </div>
-    <button id="copiarBotao">Copiar QRCode</button>
-    <a href="https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00" target="_blank">
-        <button id="whatsapp">Enviar Whatsapp</button>
-      </a>
-      
-    <br>
-    <div class="valor"></div>
-
-    <form action="/agendar" method="post">
-        <input type="hidden" name="horarioId" value="ID_DO_HORARIO_AQUI">
-        <button id="AgendarHorario">Agendar Horário</button>
-    </form>
-    
-  
-    <input type="checkbox">Aceite os<a href="termos.html">Termos de Compromisso</a>
 
     <style>
         #conteudo {
@@ -44,9 +21,95 @@
             justify-content: center; 
             font-size: 25px;
         }
-
-
-
     </style>
+</head>
+<body>
+
+    <div class="idHorario"> ID do Horario: </div>
+    <img class="qrcode" src="https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=00.00&saida=qr" alt="QR Code PIX">
+
+    <div id="conteudo">
+        <!-- Conteúdo da URL será inserido aqui -->
+    </div>
+    <div class="tempo"></div>
+
+    <button id="copiarBotao">Copiar QRCode</button>
+    <a href="https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00" target="_blank">
+        <button id="whatsapp">Enviar Whatsapp</button>
+    </a>
+    
+    <br>
+    <div class="valor"></div>
+
+    <form action="/agendar" method="post">
+        <input type="hidden" name="horarioId" value="ID_DO_HORARIO_AQUI">
+        <button id="AgendarHorario" onclick="iniciarCronometro();">Agendar Horário</button>
+    </form>
+    
+    <input type="checkbox">Aceite os<a href="termos.html">Termos de Compromisso</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sua lógica existente
+
+            // Recuperar o tempo do armazenamento local, se existir
+            var tempoRestante = localStorage.getItem('tempoRestante');
+            tempoRestante = tempoRestante ? parseInt(tempoRestante) : 10 * 60;
+
+            var tempoElemento = document.querySelector('.tempo');
+
+            var interval = setInterval(function() {
+                var minutos = Math.floor(tempoRestante / 60);
+                var segundos = tempoRestante % 60;
+
+                minutos = minutos < 10 ? "0" + minutos : minutos;
+                segundos = segundos < 10 ? "0" + segundos : segundos;
+
+                tempoElemento.textContent = minutos + ":" + segundos;
+
+                if (--tempoRestante < 0) {
+                    clearInterval(interval);
+                    tempoElemento.textContent = 'Tempo expirado!';
+                }
+
+                // Salvar o tempo restante no armazenamento local
+                localStorage.setItem('tempoRestante', tempoRestante.toString());
+            }, 1000); // Atualiza a cada segundo (1000ms)
+
+            // Limpar o armazenamento local quando o tempo expirar
+            if (tempoRestante < 0) {
+                localStorage.removeItem('tempoRestante');
+            }
+
+            // Se o formulário for submetido, limpe o armazenamento local
+            document.querySelector('form').addEventListener('submit', function() {
+                localStorage.removeItem('tempoRestante');
+            });
+        });
+
+        function iniciarCronometro() {
+            var tempoRestante = localStorage.getItem('tempoRestante');
+            tempoRestante = tempoRestante ? parseInt(tempoRestante) : 10 * 60;
+            var tempoElemento = document.querySelector('.tempo');
+
+            var interval = setInterval(function() {
+                var minutos = Math.floor(tempoRestante / 60);
+                var segundos = tempoRestante % 60;
+
+                minutos = minutos < 10 ? "0" + minutos : minutos;
+                segundos = segundos < 10 ? "0" + segundos : segundos;
+
+                tempoElemento.textContent = minutos + ":" + segundos;
+
+                if (--tempoRestante < 0) {
+                    clearInterval(interval);
+                    tempoElemento.textContent = 'Tempo expirado!';
+                }
+
+                localStorage.setItem('tempoRestante', tempoRestante.toString());
+            }, 1000); // Atualiza a cada segundo (1000ms)
+        }
+    </script>
+
 </body>
 </html>
