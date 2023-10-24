@@ -1,0 +1,175 @@
+/* DISPOSITIVOS MOVEIS */
+
+/* PADROES */
+/* CENTRALIZAR ELEMENTOS*/
+#jogos-abertos, #jogos-abertos .container-jogos-abertos, #jogos-abertos .conteudo-jogos-abertos,
+#arena, #arena .container-arena .container-jogo,
+#agendamento, #agendamento .conteudo-agendamento, #agendamento .container-agendamento,
+#rodape .container-rodape, #rodape .logo, #rodape .endereco, #rodape .contato, #rodape .navegacao
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ADICIONAR BORDA E CENTRALIZAR TEXTOS */
+#jogos-abertos, #arena, #agendamento
+{
+    text-align: center;
+    border-top: 1px solid var(--cor-laranja);
+}
+
+#arena
+{
+    border-top: 1px solid var(--cor-laranja);
+}
+
+/* ESPACAMENTO ELEMENTOS */
+#jogos-abertos .conteudo-jogos-abertos, #arena .container-arena , #agendamento .conteudo-agendamento
+{
+    gap: 0.5rem;
+}
+
+/* DIMENSIONAMENTO CONTAINERS */
+#jogos-abertos .container-jogos-abertos, #arena .container-jogo, #agendamento .container-agendamento
+{
+    width: var(--largura-dm);
+    height: var(--altura-dm);
+    border: 1px solid var(--cor-laranja);
+    border-radius: var(--borda-redonda);
+    background-color: var(--cor-acizentada);
+}
+
+/* TAMANHOS E CORES DE FONTES */
+#jogos-abertos h3,
+#arena h3,
+#agendamento h3
+{
+    color: var(--cor-laranja);
+    font-size: var(--fontSize-h3-dm);
+}
+
+#jogos-abertos p,
+#arena p,
+#agendamento p
+{
+    font-size: var(--fontSize-p-dm);
+}
+
+section {
+    padding: 50px;
+}
+
+.titulo, .carrossel-responsivo a
+{
+    color: var(--cor-laranja);
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+#agendamento a:hover
+{
+    border: 1px solid var(--cor-laranja);
+    background-color: var(--cor-acizentada);
+    color: var(--cor-branca);
+}
+
+#rodape a:hover {
+    color: var(--cor-laranja);
+}
+
+
+/* CARROSSEL IMAGENS */
+.container {
+    display: none;
+}
+
+.container-responsivo
+{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-responsivo a:nth-child(2), .container-responsivo a:nth-child(3) {
+    display: none;
+} 
+
+.backgroundResponsivo1 {
+    background: url(../images/jogosAbertosBG.png) center/cover no-repeat;
+}
+
+.backgroundResponsivo2 {
+    background: url(../images/arena.png) center/cover no-repeat;
+}
+
+.backgroundResponsivo3 {
+    background: url(../images/agendamentoBG.png) center/cover no-repeat;
+}
+
+/* JOGOS ABERTOS */
+#jogos-abertos {
+    background: url(../images/jogosAbertosBG.png) center/cover no-repeat;
+}
+
+/* ARENA */
+#arena {
+    animation: changeBackgroundColor 10s infinite;
+}
+
+@keyframes changeBackgroundColor {
+    0% {
+        background-image: url("../images/bgArena1.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+    50% {
+        background-image: url("../images/bgArena2.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+    100% {
+        background-image: url("../images/bgArena3.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+  }
+
+/* AGENDAMENTO */
+#agendamento {
+    background: url(../images/agendamentoBG.png) center/cover no-repeat;
+}
+
+#agendamento a {
+    background-color: var(--cor-laranja);
+    color: var(--cor-acizentada);
+    padding: 1.2rem 1.6rem;
+    border-radius: 4.7rem;
+    margin-top: 5px;
+}
+
+/* RODAPÉ */
+#rodape {
+    background-color: var(--cor-acizentada);
+}
+
+#rodape .container-rodape {
+    border-top: 1px solid var(--cor-laranja);
+}
+
+#rodape .logo, #rodape .endereco, #rodape .contato, #rodape .navegacao {
+    padding: 2rem;
+}
+
+#rodape .logo, #rodape .endereco, #rodape .contato {
+    border-bottom: 1px solid var(--cor-laranja);
+}
+
+#rodape .endereco a img {
+    border-radius: var(--borda-redonda);
+}
