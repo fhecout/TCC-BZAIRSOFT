@@ -285,7 +285,7 @@ app.post('/codigoValidacao', async (req, res) => {
       const results = await db.query(query, [codigoValidacao, username]);
       const token = gerarToken(username); // Gera um token JWT
       res.cookie('token', token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly 
-      res.redirect('html/pagina-horario.html');
+      res.redirect('html/horarios.html');
     } catch (error) {
       console.error('Erro ao atualizar o tokenValidado:', error);
       res.status(500).send('Erro interno ao atualizar o tokenValidado');

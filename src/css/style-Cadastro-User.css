@@ -1,0 +1,91 @@
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 70vh;
+}
+
+.container h1 {
+    margin-bottom: 20px;
+}
+
+.container form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #FF7300;
+    padding: 50px;
+    font-size: 20px;
+    background: rgba(41, 41, 41, 0.80);
+}
+
+.container form input {
+    margin-bottom: 20px;
+    padding: 5px 15px;
+    border-radius: 75px;
+    border: none;
+} 
+
+#cpf::placeholder, #email::placeholder,
+#senha::placeholder, #name::placeholder,
+#telefone::placeholder {
+    text-align: center;
+    color: #292929;
+}
+
+form button {
+    border-radius: 75px;
+    border: 1px solid #fff;
+    background-color: #292929;
+    color: #ff7300;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 5px 0;
+    transition: 0.3s ease-in;
+}
+
+form button:hover {
+    border: 1px solid #ff7300;
+    background-color: #292929;
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (max-width: 475px){
+    header {
+        margin-bottom: 10px;
+        flex-direction: column;
+    }
+
+    .container h1 {
+        font-size: 30px;
+        margin-bottom: 0;
+    }
+
+    .container form {
+        padding: 15px 50px;
+    }
+}
