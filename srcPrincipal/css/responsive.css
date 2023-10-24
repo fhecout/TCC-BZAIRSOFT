@@ -1,0 +1,213 @@
+@media(min-width: 768px) {
+    #arena .container-arena {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    #arena .container-arena .container-jogo {
+        width: 23rem;
+    }
+
+    #jogos-abertos .conteudo-jogos-abertos, #arena .container-arena
+    {
+        flex-direction: row;
+    }
+
+    #agendamento .container-agendamento
+    {
+        width: 30.5rem;
+        height: var(--altura-tablet);
+    }
+
+    #jogos-abertos .conteudo-jogos-abertos h3,
+    #agendamento .container-agendamento h3
+    {
+        font-size: var(--fontSize-h3-tablet);
+    }
+
+    #arena .container-arena h3
+    {
+        font-size: 2.2rem;
+    }
+    
+    #jogos-abertos p,
+    #agendamento p 
+    {
+        font-size: var(--fontSize-p-tablet);
+    }
+
+    #arena p
+    {
+        font-size: 1.4rem;
+    }
+    
+    #agendamento a
+    {
+        padding: 1.3rem 2rem;
+        border-radius: 4.7rem;
+        font-size: 2rem;
+    }
+
+    #rodape .logo, #rodape .endereco, #rodape .contato, #rodape .navegacao
+    {
+        font-size: 1.4rem;
+        gap: 0.7rem;
+    }
+}
+
+
+@media (min-width: 992px) {
+    .carrossel-responsivo {
+        display: none;
+    }
+
+    .container {
+        display: block;
+        height: 100vh;
+    }
+    
+    .carrossel{
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        transition: 500ms linear;
+        height: 100vh;
+    }
+    
+    .imagem {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        text-align: center;
+    }
+    
+    .imagem a img {
+        border: 1px solid #ff7300;
+    }
+    
+    .imagem span {
+        color: #ff7300;
+        font-size: 25px;
+        -webkit-text-stroke-width: 0.5px;
+        -webkit-text-stroke-color: #000;
+    }
+    
+    .imagem:hover {
+        transform: scale(1.05,  1.05);
+        transition: 300ms linear;
+    }
+    
+    .link-ativo {
+        color:#fff;
+        cursor: pointer;
+        background: linear-gradient(180deg, rgba(255, 115, 0, 0.00) 67.71%, #FF7300 100%);
+    }
+    
+    .backGround1 {
+        background: url(../images/jogosAbertosBG.png) center/cover no-repeat;
+    }
+    
+    .backGround2 {
+        background: url(../images/arena.png) center/cover no-repeat;
+    }
+    
+    .backGround3 {
+        background: url(../images/agendamentoBG.png) center/cover no-repeat;
+    }
+    
+    .container-responsivo {
+        display: none;
+    }
+    
+   #jogos-abertos, #arena, #agendamento {
+        height: 100vh;
+    }
+    
+    #jogos-abertos .container-jogos-abertos h3 {
+        font-size: var(--fontSize-h3-desktop);
+    }
+    
+    #jogos-abertos .container-jogos-abertos p {
+        font-size: var(--fontSize-p-desktop);
+    }
+
+    #jogos-abertos .container-jogos-abertos,
+    #agendamento .container-agendamento{
+        width: var(--largura-desktop);
+        height: var(--altura-desktop);
+    }
+
+    
+    #arena {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #arena .container-arena {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+        
+    #arena .container-arena .container-jogo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        width: 34rem;
+        height: var(--altura-desktop);
+        padding: 2rem;
+    }
+
+    #agendamento .conteudo-agendamento {
+        flex-direction: row;
+    }
+
+    #agendamento h3 {
+        font-size: 4rem;
+    }
+    
+    #agendamento p {
+        font-size: 2.5rem;
+    }
+    
+    #agendamento a {
+        padding: 1.3rem 2rem;
+        border-radius: 4.7rem;
+        font-size: 2rem;
+        margin-top: 5px;
+        border: 1px solid var(--cor-laranja);
+    }
+
+    #rodape .container-rodape {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    
+    #rodape .logo, #rodape .endereco, #rodape .contato, #rodape .navegacao {
+        font-size: 1.4rem;
+        gap: 0.7rem;
+    }
+
+    #rodape .logo, #rodape .endereco, #rodape .contato {
+        border-bottom: 0;
+    }
+
+
+    .titulo
+    {
+        color: var(--cor-laranja);
+        font-size: 5rem;
+    }
+
+    #arena .container-arena h3 {
+        font-size: 5rem;
+    }
+}
+
