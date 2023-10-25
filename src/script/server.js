@@ -548,7 +548,7 @@ app.post('/adicionar-horario', async (req, res) => {
 
   try {
     const query = await db.query('select * from horarios_disponiveis where dia = $1 and horario = $2 and disp=true', [dia, horario])
-    if (!query) {
+    if (query.rows.length === 0) {
       // Insira o novo horário na tabela horarios_disponiveis
       await db.query('INSERT INTO horarios_disponiveis (dia, horario, disp, valor) VALUES ($1, $2, true, $3)', [dia, horario, valor]);
       await db.query('INSERT INTO log_alteracoes (acao, dia, horario, valor , data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Inclusao', dia, horario, valor]);
@@ -556,12 +556,13 @@ app.post('/adicionar-horario', async (req, res) => {
       res.send('Horario ja esta inserido')
     }
 
-    res.redirect('/adm.html'); // Redirecione de volta para a página de administração
+    res.redirect('HTML/adm.html'); // Redirecione de volta para a página de administração
   } catch (error) {
     console.error('Erro ao adicionar horário:', error);
     res.status(500).send('Erro ao adicionar horário.');
   }
 });
+
 
 
 
