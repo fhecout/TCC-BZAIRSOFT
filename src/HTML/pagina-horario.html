@@ -7,19 +7,31 @@
         #conteudo {
             font-size: 0px;
         }
-  
+
         .qrcode {
             display: block;
             margin-left: auto;
             margin-right: auto;
         }
-    
+
         .idHorario {
             display: flex;
             flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
+            align-items: center;
+            justify-content: center;
             font-size: 25px;
+        }
+
+        .status-disponivel {
+            color: green;
+        }
+
+        .status-analise {
+            color: yellow;
+        }
+
+        .status-bloqueado {
+            color: red;
         }
     </style>
 </head>
@@ -31,7 +43,7 @@
     <div id="conteudo">
         <!-- Conteúdo da URL será inserido aqui -->
     </div>
-    <div class="tempo"></div>
+    <div class="status-horario">Status do horário será inserido aqui</div>
 
     <button id="copiarBotao">Copiar QRCode</button>
     <a href="https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00" target="_blank">
@@ -47,69 +59,6 @@
     </form>
     
     <input type="checkbox">Aceite os<a href="termos.html">Termos de Compromisso</a>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sua lógica existente
-
-            // Recuperar o tempo do armazenamento local, se existir
-            var tempoRestante = localStorage.getItem('tempoRestante');
-            tempoRestante = tempoRestante ? parseInt(tempoRestante) : 10 * 60;
-
-            var tempoElemento = document.querySelector('.tempo');
-
-            var interval = setInterval(function() {
-                var minutos = Math.floor(tempoRestante / 60);
-                var segundos = tempoRestante % 60;
-
-                minutos = minutos < 10 ? "0" + minutos : minutos;
-                segundos = segundos < 10 ? "0" + segundos : segundos;
-
-                tempoElemento.textContent = minutos + ":" + segundos;
-
-                if (--tempoRestante < 0) {
-                    clearInterval(interval);
-                    tempoElemento.textContent = 'Tempo expirado!';
-                }
-
-                // Salvar o tempo restante no armazenamento local
-                localStorage.setItem('tempoRestante', tempoRestante.toString());
-            }, 1000); // Atualiza a cada segundo (1000ms)
-
-            // Limpar o armazenamento local quando o tempo expirar
-            if (tempoRestante < 0) {
-                localStorage.removeItem('tempoRestante');
-            }
-
-            // Se o formulário for submetido, limpe o armazenamento local
-            document.querySelector('form').addEventListener('submit', function() {
-                localStorage.removeItem('tempoRestante');
-            });
-        });
-
-        function iniciarCronometro() {
-            var tempoRestante = localStorage.getItem('tempoRestante');
-            tempoRestante = tempoRestante ? parseInt(tempoRestante) : 10 * 60;
-            var tempoElemento = document.querySelector('.tempo');
-
-            var interval = setInterval(function() {
-                var minutos = Math.floor(tempoRestante / 60);
-                var segundos = tempoRestante % 60;
-
-                minutos = minutos < 10 ? "0" + minutos : minutos;
-                segundos = segundos < 10 ? "0" + segundos : segundos;
-
-                tempoElemento.textContent = minutos + ":" + segundos;
-
-                if (--tempoRestante < 0) {
-                    clearInterval(interval);
-                    tempoElemento.textContent = 'Tempo expirado!';
-                }
-
-                localStorage.setItem('tempoRestante', tempoRestante.toString());
-            }, 1000); // Atualiza a cada segundo (1000ms)
-        }
-    </script>
 
 </body>
 </html>

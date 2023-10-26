@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login ADM</title>
+    <title>Login Administrador</title>
+
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/style-Login.css">
+
 </head>
+
 <body>
-    <input type="text" placeholder="Email" name="username">
-    <input type="password" placeholder="Senha" name="password">
-    <button>Enviar</button>
+    <header>
+        <a href="../HTML/login.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    </header>
+    <div class="container adm">
+        <div class="container-login adm">
+            <p class="titulo-adm">LOGIN ADMINISTRADOR</p>
+            <form action="/loginAdm" method="post">
+                <input id="email" type="text" placeholder="Email" name="username">
+                <input id="senha" type="password" placeholder="Senha" name="senha">
+                <button>Enviar</button>
+            </form>
+        </div>
+        <a href="../HTML/login.html">Voltar Para Página de Login</a>
+    </div>
 </body>
+
 </html>

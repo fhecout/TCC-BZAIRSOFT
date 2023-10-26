@@ -19,7 +19,6 @@ header {
     flex-direction: column;
     height: 80vh;
     gap: 5px;
-    color: #FF7300;
 }
 
 .main-container {
