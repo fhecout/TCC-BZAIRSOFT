@@ -4,40 +4,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário</title>
-  <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/style-Cadastro-User.css">
 </head>
 <body>
-    <header>
-        <a href="../../index.html">
-            <img src="../images/Logo.png" alt="Logo">
-        </a>
+  <div class="container">
+    <h1>Cadastro de Usuário</h1>
+    <form action="/cadastro" method="POST">
+      <label for="cpf">CPF:</label>
+      <input type="text" id="cpf" name="cpf" placeholder="Digite o CPF" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="username" placeholder="Digite o email" required>
+      
+      <label for="password">Senha:</label>
+      <input type="password" id="senha" name="senha" placeholder="Digite a senha" required>
+      
+      <label for="name">Nome:</label>
+      <input type="text" id="name" name="nome" placeholder="Digite o nome" required>
 
-        <a href="./login.html">Voltar para Página Inicial</a>
-    </header>
-    <div class="container">
-        <h1>CADASTRO DE USUÁRIO</h1>
-        <form action="/cadastro" method="POST">
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" placeholder="DIGITE SEU CPF" required>
-                  
-            <label for="email">E-Mail:</label>
-            <input type="email" id="email" name="username" placeholder="DIGITE SEU E-MAIL" required>
-                  
-            <label for="password">Senha:</label>
-            <input type="password" id="senha" name="senha" placeholder="DIGITE SUA SENHA" required>
-                  
-            <label for="name">Nome:</label>
-            <input type="text" id="name" name="nome" placeholder="DIGITE SEU NOME" required>
+      <label for="telefone">Telefone</label>
+      <input type="text" id="telefone" name="telefone" placeholder="Digite o seu Telefone" required>
+      
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
 
-            <label for="telefone">Telefone:</label>
-            <input type="text" id="telefone" name="telefone" placeholder="DIGITE SEU TELEFONE" required>
-                  
-            <button type="submit">CADASTRAR</button>
-        </form>
-    </div>
 
-<script>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+h1 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+  </style>
+
+  <script>
     // Função para formatar o CPF com pontos (xxx.xxx.xxx-xx)
 function formatCPF(cpf) {
   return cpf.replace(/\D/g, '')

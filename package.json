@@ -21,6 +21,7 @@
     "express-session": "^1.17.3",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.4",
     "patch": "^0.0.1",
     "pdfkit": "^0.13.0",

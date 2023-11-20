@@ -6,7 +6,7 @@ async function generatePDF(results) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument();
 
-    const logoPath = path.join(__dirname, '..', 'src', 'images', 'logo.png');
+    const logoPath = path.join(__dirname, '..', '..', 'src', 'images', 'logo.png');
     const logo = fs.readFileSync(logoPath);
     const imageWidth = 50;
     const centerX = (doc.page.width - imageWidth) / 2;

@@ -1,1 +1,1 @@
-select * from horarios_disponiveis 
+select 

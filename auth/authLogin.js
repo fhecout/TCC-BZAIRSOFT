@@ -23,6 +23,7 @@ function verificarUsuario(username) {
 // Função para verificar se um usuário com o email e senha fornecidos existe no banco de dados
 function verificaSenha(username, senha) {
   return new Promise((resolve, reject) => {
+    
     // Consulta SQL para selecionar um usuário com o email e senha fornecidos
     const query = 'SELECT * FROM usuarios WHERE email = $1 AND senha = $2';
 
