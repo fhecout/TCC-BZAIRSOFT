@@ -7,10 +7,11 @@ const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const ExcelJS = require("exceljs");
 const { verificarUsuario, verificaSenha } = require("../../auth/authLogin");
-const {VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken, GerarCodigo,} = require("../../auth/authCadastro");
+const { VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken, GerarCodigo, } = require("../../auth/authCadastro");
 const { VerificaCodigoValidacao } = require("../../auth/authToken");
 const { enviarSenha, enviarEmailComToken, enviarEmailDesmarcar } = require("../../email/email");
 const { generatePDF } = require("../../pdfs/pdf");
+const { verificaAdministrador } = require("../../auth/authLoginADM");
 const db = require("../../db/bd");
 const { log } = require("console");
 const cron = require('node-cron');
@@ -232,6 +233,22 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+app.post("/loginAdm", async (req, res) => {
+  const { username, senha } = req.body;
+
+  const LoginConfere = await verificaAdministrador(username, senha);
+
+  if (LoginConfere) {
+    res.redirect("html/adm.html");
+  } else {
+    res.send("Usuário inválido.");
+  }
+});
+
+
+app.post
+
 app.post("/esqueceuSenha", async (req, res) => {
   const { username } = req.body;
 
@@ -321,112 +338,6 @@ app.post("/horarios", async (req, res) => {
 
 app.get("/pagina-horario", (req, res) => {
   const horarioId = req.query.id;
-
-  db.query(
-    "SELECT horario, dia, disp, valor, id from horarios_disponiveis where id=$1",
-    [horarioId]
-  )
-    .then((result) => {
-      const horario = result.rows[0];
-
-      fs.readFile(
-        path.join(absolutePath, "html/pagina-horario.html"),
-        "utf8",
-        (err, data) => {
-          if (err) {
-            res.status(500).send("Erro ao ler o arquivo HTML");
-            return;
-          }
-
-          function formatarDataBrasileira(dataOriginal) {
-            const dia = dataOriginal.getDate().toString().padStart(2, "0");
-            const mes = (dataOriginal.getMonth() + 1)
-              .toString()
-              .padStart(2, "0");
-            const ano = dataOriginal.getFullYear();
-
-            return `${dia}/${mes}/${ano}`;
-          }
-
-          const dataOriginal = new Date(horario.dia);
-          const dataFormatada = formatarDataBrasileira(dataOriginal);
-
-          const url = `https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=${horario.valor}&saida=br`;
-
-          axios
-            .get(url)
-            .then((response) => {
-              if (response.status === 200) {
-                const conteudo = response.data;
-                const brcode = conteudo.brcode;
-
-                const novoHTML = data.replace(
-                  "<!-- Conteúdo da URL será inserido aqui -->",
-                  brcode
-                );
-                const htmlComValores = novoHTML.replace(
-                  "valor=00.00",
-                  `valor=${horario.valor}`
-                );
-                const valor = htmlComValores.replace(
-                  '<div class="valor"></div>',
-                  `<div class="valor">Valor:${horario.valor}</div>`
-                );
-                const idHorario = valor.replace(
-                  '<div class="idHorario"> ID do Horario: </div>',
-                  `<div class="idHorario"> ID do Horario:${horario.id} </div>`
-                );
-                const Whatsapp = idHorario.replace(
-                  "https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00",
-                  `https://wa.me//5541999575249?text=Olá,%20o%20codigo%20do%20meu%20agendamento%20é%20*${horario.id}*%20as%20${horario.horario}%20do%20Dia:%20${dataFormatada},%20segue%20meu%20comprovante%20de%20pagamento!`
-                );
-                const id = Whatsapp.replace(
-                  "ID_DO_HORARIO_AQUI",
-                  `${horario.id}`
-                );
-
-                let statusHtml = "";
-                switch (horario.disp) {
-                  case 1:
-                    statusHtml =
-                      '<div class="status-horario status-disponivel">Horário disponível</div>';
-                    break;
-                  case 2:
-                    statusHtml =
-                      '<div class="status-horario status-analise">Horário em Análise</div>';
-                    break;
-                  case 3:
-                    statusHtml =
-                      '<div class="status-horario status-bloqueado">Horário Bloqueado</div>';
-                    break;
-                  default:
-                    statusHtml =
-                      '<div class="status-horario">Status desconhecido</div>';
-                }
-
-                const finalHtml = id.replace(
-                  "Status do horário será inserido aqui",
-                  statusHtml
-                );
-
-                res.send(finalHtml);
-              } else {
-                console.log("Não foi possível acessar a página.");
-              }
-            })
-            .catch((error) => {
-              console.error("Erro ao acessar a página:", error);
-            });
-        }
-      );
-    })
-    .catch((error) => {
-      res.status(500).send("Erro ao buscar informações do horário");
-    });
-});
-
-app.post("/agendar", async (req, res) => {
-  const { horarioId } = req.body;
   const token = req.cookies.token; // Obtenha o token do cookie
 
   if (!token) {
@@ -439,58 +350,196 @@ app.post("/agendar", async (req, res) => {
     }
 
     const username = decoded.username;
+    const Usuario = await db.query(
+      "SELECT cpf, id, nome FROM usuarios WHERE email = $1",
+      [username]
+    );
 
-    try {
-      // Obtendo o ID do usuário e o estado de bloqueio através do token (username)
-      const userResults = await db.query(
-        "SELECT cpf, id, bloqueado FROM usuarios WHERE email = $1",
-        [username]
-      );
-      if (userResults.rowCount === 0) {
-        return res.status(404).send("Usuário não encontrado.");
-      }
+    const userNome = Usuario.rows[0].nome;
+    const userCPF = Usuario.rows[0].cpf;
 
-      const userId = userResults.rows[0].id;
-      const userCPF = userResults.rows[0].cpf;
-      const bloqueado = userResults.rows[0].bloqueado;
 
-      // Verifique se o cliente está bloqueado
-      if (bloqueado) {
-        // Se bloqueado, não mude disp e informe o cliente
-        return res
-          .status(403)
-          .send("Cliente bloqueado. Não é possível agendar o horário.");
-      } else {
-        // Se não estiver bloqueado, tente atualizar o horário
-        const queryResult = await db.query(
-          "UPDATE horarios_disponiveis SET disp = 2, cliente_cpf = $2 WHERE id = $1 AND disp = 1 RETURNING dia, horario",
-          [horarioId, userCPF]
-        );
-
-        if (queryResult.rowCount > 0) {
-          const dia = queryResult.rows[0].dia;
-          const horario = queryResult.rows[0].horario;
-
-          await db.query(
-            "INSERT INTO HorariosUsuarios (usuario_id, horario_id, dia, horario, cpf) VALUES ($1, $2, $3, $4, $5)",
-            [userId, horarioId, dia, horario, userCPF]
-          );
-          return res.redirect(`/pagina-horario?id=${horarioId}`);
-        } else {
-          return res
-            .status(404)
-            .send(
-              "Horário não encontrado ou já reservado. Não foi possível bloquear o horário."
-            );
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao bloquear o horário:", error);
-      return res
-        .status(500)
-        .send("Erro interno do servidor ao bloquear o horário.");
+    if (Usuario.rowCount === 0) {
+      return res.status(404).send("Usuário não encontrado.");
     }
+
+    // const nomeUsuario = finalHtml.replace('<div class="nome">Nome:</div>',`<div class="nome">Nome:${Usuario.nome}</div>`)
+
+    db.query(
+      "SELECT horario, dia, disp, valor, id from horarios_disponiveis where id=$1",
+      [horarioId]
+    )
+      .then((result) => {
+        const horario = result.rows[0];
+
+        fs.readFile(
+          path.join(absolutePath, "html/pagina-horario.html"),
+          "utf8",
+          (err, data) => {
+            if (err) {
+              res.status(500).send("Erro ao ler o arquivo HTML");
+              return;
+            }
+
+            function formatarDataBrasileira(dataOriginal) {
+              const dia = dataOriginal.getDate().toString().padStart(2, "0");
+              const mes = (dataOriginal.getMonth() + 1)
+                .toString()
+                .padStart(2, "0");
+              const ano = dataOriginal.getFullYear();
+
+              return `${dia}/${mes}/${ano}`;
+            }
+
+            const dataOriginal = new Date(horario.dia);
+            const dataFormatada = formatarDataBrasileira(dataOriginal);
+
+            const url = `https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=${horario.valor}&saida=br`;
+
+            axios
+              .get(url)
+              .then((response) => {
+                if (response.status === 200) {
+                  const conteudo = response.data;
+                  const brcode = conteudo.brcode;
+
+                  const novoHTML = data.replace(
+                    "<!-- Conteúdo da URL será inserido aqui -->",
+                    brcode
+                  );
+                  const htmlComValores = novoHTML.replace(
+                    "valor=00.00",
+                    `valor=${horario.valor}`
+                  );
+                  const valor = htmlComValores.replace(
+                    '<div class="valor"></div>',
+                    `<div class="valor">Valor:${horario.valor}</div>`
+                  );
+                  const idHorario = valor.replace(
+                    '<div class="idHorario"> ID do Horario: </div>',
+                    `<div class="idHorario"> ID do Horario:${horario.id} </div>`
+                  );
+                  const Whatsapp = idHorario.replace(
+                    "https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00",
+                    `https://wa.me//5541999575249?text=Olá,%20o%20codigo%20do%20meu%20agendamento%20é%20*${horario.id}*%20as%20${horario.horario}%20do%20Dia:%20${dataFormatada},%20segue%20meu%20comprovante%20de%20pagamento!`
+                  );
+                  const id = Whatsapp.replace(
+                    "ID_DO_HORARIO_AQUI",
+                    `${horario.id}`
+                  );
+
+                  let statusHtml = "";
+                  switch (horario.disp) {
+                    case 1:
+                      statusHtml =
+                        '<div class="status-horario status-disponivel">Horário disponível</div>';
+                      break;
+                    case 2:
+                      statusHtml =
+                        '<div class="status-horario status-analise">Horário em Análise</div>';
+                      break;
+                    case 3:
+                      statusHtml =
+                        '<div class="status-horario status-bloqueado">Horário Bloqueado</div>';
+                      break;
+                    default:
+                      statusHtml =
+                        '<div class="status-horario">Status desconhecido</div>';
+                  }
+
+
+
+                  const finalHtml = id.replace(
+                    "Status do horário será inserido aqui",
+                    statusHtml
+                  );
+
+                  const nomeUsuario = finalHtml.replace('<div class="nome">Nome:</div>', `<div class="nome">Nome:${userNome}</div>`)
+                  const CPFUsuario = nomeUsuario.replace('<div class="cpf">CPF:</div>', `<div class="cpf">CPF:${userCPF}</div>`)
+
+                  res.send(CPFUsuario);
+                } else {
+                  console.log("Não foi possível acessar a página.");
+                }
+              })
+              .catch((error) => {
+                console.error("Erro ao acessar a página:", error);
+              });
+          }
+        );
+      })
+      .catch((error) => {
+        res.status(500).send("Erro ao buscar informações do horário");
+      });
   });
+
+  app.post("/agendar", async (req, res) => {
+    const { horarioId } = req.body;
+    const token = req.cookies.token; // Obtenha o token do cookie
+
+    if (!token) {
+      return res.status(401).send("Token não fornecido.");
+    }
+
+    jwt.verify(token, "BZAirsoftArenaTCC", async (err, decoded) => {
+      if (err) {
+        return res.status(401).send("Token inválido.");
+      }
+
+      const username = decoded.username;
+
+      try {
+        // Obtendo o ID do usuário e o estado de bloqueio através do token (username)
+        const userResults = await db.query(
+          "SELECT cpf, id, bloqueado FROM usuarios WHERE email = $1",
+          [username]
+        );
+        if (userResults.rowCount === 0) {
+          return res.status(404).send("Usuário não encontrado.");
+        }
+
+        const userId = userResults.rows[0].id;
+        const userCPF = userResults.rows[0].cpf;
+        const bloqueado = userResults.rows[0].bloqueado;
+
+        // Verifique se o cliente está bloqueado
+        if (bloqueado) {
+          // Se bloqueado, não mude disp e informe o cliente
+          return res
+            .status(403)
+            .send("Cliente bloqueado. Não é possível agendar o horário.");
+        } else {
+          // Se não estiver bloqueado, tente atualizar o horário
+          const queryResult = await db.query(
+            "UPDATE horarios_disponiveis SET disp = 2, cliente_cpf = $2 WHERE id = $1 AND disp = 1 RETURNING dia, horario",
+            [horarioId, userCPF]
+          );
+
+          if (queryResult.rowCount > 0) {
+            const dia = queryResult.rows[0].dia;
+            const horario = queryResult.rows[0].horario;
+
+            await db.query(
+              "INSERT INTO HorariosUsuarios (usuario_id, horario_id, dia, horario, cpf) VALUES ($1, $2, $3, $4, $5)",
+              [userId, horarioId, dia, horario, userCPF]
+            );
+            return res.redirect(`/pagina-horario?id=${horarioId}`);
+          } else {
+            return res
+              .status(404)
+              .send(
+                "Horário não encontrado ou já reservado. Não foi possível bloquear o horário."
+              );
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao bloquear o horário:", error);
+        return res
+          .status(500)
+          .send("Erro interno do servidor ao bloquear o horário.");
+      }
+    });
+  })
 });
 
 // Rota para a página de perfil do usuário
@@ -962,9 +1011,8 @@ app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
     }
 
     res.json({
-      mensagem: `Jogador ${
-        bloqueado ? "bloqueado" : "desbloqueado"
-      } com sucesso!`,
+      mensagem: `Jogador ${bloqueado ? "bloqueado" : "desbloqueado"
+        } com sucesso!`,
       dados: resultado.rows[0],
     });
   } catch (error) {
@@ -1064,7 +1112,7 @@ app.post("/agendar-horario", async (req, res) => {
 app.post("/liberarHorarios", async (req, res) => {
   try {
     const { horarioId } = req.body;
-      await db.query("UPDATE horarios_disponiveis SET disp = 1, cliente_cpf = NULL WHERE id = $1 and disp=3 and cliente_cpf IS NULL", [horarioId]);
+    await db.query("UPDATE horarios_disponiveis SET disp = 1, cliente_cpf = NULL WHERE id = $1 and disp=3 and cliente_cpf IS NULL", [horarioId]);
 
 
 
