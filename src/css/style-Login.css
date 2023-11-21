@@ -107,19 +107,9 @@ header {
 }
 
 .adm {
-    gap: 5px;
-    flex-direction: column;
-}
-
-.adm a, .container a{
-    color: #fff;
+    gap: 10px;
     transition: 0.3s ease-in;
 }
-
-.adm a:hover, .container a:hover {
-    color: #292929;
-}
-
 
 @media(max-width: 900px){
     .container-infos, .container-login {

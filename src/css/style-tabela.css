@@ -1,0 +1,74 @@
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
+table {
+    width: 40%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th, td {
+    border: 1px solid var(--cor-laranja);
+    padding: 5px;
+    text-align: left;
+}
+
+th:hover, td:hover{
+    border: 1px solid var(--cor-acizentada);
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    border: 1px solid var(--cor-acizentada);
+    background-color: var(--cor-laranja);
+    color: var(--cor-acizentada);
+    cursor: pointer;
+}
+
+tr.selected {
+    background-color: var(--cor-acizentada);; 
+    color: var(--cor-laranja);
+}
+
+.botoes {
+    margin-top: 20px;
+}
+
+.botoes button {
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--cor-acizentada);
+    color: var(--cor-laranja);
+    background-color: var(--cor-acizentada);
+    transition: 0.3s linear;
+}
+
+.botoes button:hover {
+    cursor: pointer;
+}

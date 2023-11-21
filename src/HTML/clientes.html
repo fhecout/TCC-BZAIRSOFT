@@ -1,65 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 80%;
-            margin: 20px auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        tr {
-            cursor: pointer;
-        }
-
-        #searchBox {
-            margin-bottom: 10px;
-            padding: 8px;
-            font-size: 16px;
-            width: 300px;
-        }
-        
-    </style>
+    <link rel="stylesheet" href="../css/style-clientes.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
 </head>
 
 <body>
+    <header>
+        <a href="../HTML/login.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    </header>
+    
     <div class="container">
         <h1>Lista de Clientes</h1>
         <!-- Input for searching the clients -->
         <p>Buscar Clientes por CPF ou Nome</p>
         <input type="text" id="searchBox" onkeyup="filterClientes()" placeholder="Buscar clientes...">
-        <table border="1">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>

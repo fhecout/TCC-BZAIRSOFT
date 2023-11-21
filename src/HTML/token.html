@@ -2,22 +2,35 @@
 <html>
 <head>
     <title>Validação de Token</title>
+    <link rel="stylesheet" href="../css/style-token.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
 </head>
 <body>
-    <h1>Validação de Token</h1>
-    <form action="/codigoValidacao" method="post">
-        <label for="codigoValidacao">codigoValidacao</label>
-        <input type="text" id="codigoValidacao" name="codigoValidacao" required><br><br>
-        <input type="hidden" id="username" name="username" value="<%= username %>">
-        <input type="submit" value="Validar codigoValidacao">
-    </form>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+
+        <a href="login.html">
+            Voltar para página incial
+        </a>
+    </header>
+    <div class="container">
+        <form action="/codigoValidacao" method="post">
+            <h1>Validação de Token</h1>
+            <label for="codigoValidacao">Código Validação:</label>
+            <input type="text" id="codigoValidacao" name="codigoValidacao" required>
+            <input type="hidden" id="username" name="username" value="<%= username %>">
+            <input type="submit" value="Validar Token">
+        </form>
+    </div>
 
     <script>
         // Obtém o valor do parâmetro 'username' da URL
         const urlParams = new URLSearchParams(window.location.search);
         const username = urlParams.get('username');
         
-    
         // Use o valor do username por exemplo, exibindo na página
         const usernameDisplay = document.createElement('p');
         usernameDisplay.textContent = `Token para o usuário: ${username}`;

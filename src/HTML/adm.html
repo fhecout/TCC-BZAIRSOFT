@@ -1,43 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Administração</title>
-    <style>
-        .navbar {
-            overflow: hidden;
-            background-color: #333;
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar a {
-            float: left;
-            font-size: 16px;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/style-adm.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
 </head>
-
 <body>
+    <header>
+        <a href="../HTML/login.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    </header>
 
-    <div class="navbar">
-        <a href="clientes.html">Clientes</a>
-        <a href="TodosHorarios.html">Horarios</a>
-        <a href="configArena.html">Configuração</a>
-    </div>
+    <h1>Página de Administração</h1>
 
     <!-- Formulário para adicionar horários -->
-    <h2>Adicionar Horário</h2>
+    
+    <div class="container">
+        <h2>Adicionar Horário</h2>
     <form action="/adicionar-horario" method="post">
         <label for="dia">Dia:</label>
         <input type="date" id="dia" name="dia" required>
@@ -66,21 +49,17 @@
             <button type="submit">Validar Senha e Bloquear Horario</button>
         </div>
     </form>
-
+    
     <h2>Gerar Relatório Excel</h2>
     <form action="/gerar-relatorio-excel" method="post">
         <label for="filtro">Filtrar do dia:</label>
         <input type="date" id="filtroInicial" name="filtroInicial">
         <label for="filtro">Filtrar ate o dia:</label>
         <input type="date" id="filtroFinal" name="filtroFinal">
-        <br>
         <label for="filtro">Filtrar pelo ID</label>
         <input type="text" id="ID" name="ID">
-
         <button type="submit">Gerar Relatório</button>
-
     </form>
-
 
     <h2>Gerar Relatório de Log Excel</h2>
     <form action="/gerar-relatorio-log-excel" method="post">
@@ -94,162 +73,16 @@
     <h2>Clientes que estão cadastrados</h2>
     <form action="/gerar-pdf" method="get">
         <button type="submit">Gerar PDF e Baixar</button>
-    </form>
-
-
-
-
-     <!-- Campos de filtro -->
-     <div class="filtro">
-        <h3>Filtrar Horários</h3>
-        CPF: <input type="text" id="filterCPF">
-        ID: <input type="text" id="filterID">
-        <button onclick="aplicarFiltro()">Filtrar</button>
-        <button onclick="limparFiltro()">Limpar Filtro</button>
     </div>
 
-    <table id="horariosTable">
-        <thead>
-            <tr>
-                <th id="id" onclick="ordenarTabela(0, true)">ID</th>
-                <th>CPF</th>
-                <th>Dia</th>
-                <th onclick="ordenarTabela(2)">Horário</th>
-                <th>Bloquear</th>
-                <th>Liberar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Linhas da tabela serão inseridas aqui via JavaScript -->
-        </tbody>
-    </table>
 
-    <script>
-        function formatarData(data) {
-            const dataObj = new Date(data);
-            const dia = dataObj.getDate().toString().padStart(2, '0');
-            const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0');
-            const ano = dataObj.getFullYear();
-            return `${dia}/${mes}/${ano}`;
-        }
-
-        function bloquearHorario(id) {
-            fetch('/bloquear-horario', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ horarioId: id })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Horário bloqueado com sucesso!');
-                location.reload();
+        <script>
+            //evento de clique ao botão "Bloquear Horario para jogador"
+            document.getElementById("exibir-senha").addEventListener("click", function () {
+                // Exibe o campo de senha quando o botão é clicado
+                document.getElementById("senha-container").style.display = "block";
             });
-        }
-
-        function liberarHorario(id) {
-            fetch('/liberarHorario', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ horarioId: id })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Horário liberado com sucesso!');
-                location.reload();
-            });
-        }
-
-        let direcaoOrdenacao = 1;
-        let colunaOrdenada = null;
-
-        function ordenarTabela(coluna, ehNumero = false) {
-            const tabela = document.getElementById("horariosTable");
-            const linhas = Array.from(tabela.tBodies[0].rows);
-
-            linhas.sort((a, b) => {
-                let A = a.cells[coluna].innerText;
-                let B = b.cells[coluna].innerText;
-                if (ehNumero) {
-                    A = parseInt(A);
-                    B = parseInt(B);
-                }
-                return A > B ? direcaoOrdenacao : A < B ? -direcaoOrdenacao : 0;
-            });
-
-            while (tabela.tBodies[0].firstChild) {
-                tabela.tBodies[0].removeChild(tabela.tBodies[0].firstChild);
-            }
-
-            tabela.tBodies[0].append(...linhas);
-            direcaoOrdenacao = colunaOrdenada === coluna ? -direcaoOrdenacao : 1;
-            colunaOrdenada = coluna;
-        }
-
-        function aplicarFiltro() {
-            const cpfFiltro = document.getElementById("filterCPF").value;
-            const idFiltro = document.getElementById("filterID").value;
-            const linhas = document.querySelectorAll("#horariosTable tbody tr");
-
-            linhas.forEach(linha => {
-                const cpf = linha.cells[1].innerText;
-                const id = linha.cells[0].innerText;
-
-                if ((cpfFiltro && cpf !== cpfFiltro) || 
-                    (idFiltro && id !== idFiltro)) {
-                    linha.style.display = "none";
-                } else {
-                    linha.style.display = "";
-                }
-            });
-        }
-
-        function limparFiltro() {
-            document.getElementById("filterCPF").value = "";
-            document.getElementById("filterID").value = "";
-            aplicarFiltro();
-        }
-
-        window.onload = function () {
-            fetch('/horarios-agendados')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('horariosTable').querySelector('tbody');
-                data.forEach(item => {
-                    const row = tableBody.insertRow();
-                    row.insertCell(0).textContent = item.id;
-                    row.insertCell(1).textContent = item.cliente_cpf;
-                    row.insertCell(2).textContent = formatarData(item.dia);
-                    row.insertCell(3).textContent = item.horario;
-
-                    // Botão Bloquear
-                    const bloquearCell = row.insertCell(4);
-                    const bloquearButton = document.createElement('button');
-                    bloquearButton.textContent = 'Bloquear';
-                    bloquearButton.setAttribute('data-horario-id', item.id);
-                    bloquearButton.onclick = function () {
-                        const horarioId = this.getAttribute('data-horario-id');
-                        bloquearHorario(horarioId);
-                    };
-                    bloquearCell.appendChild(bloquearButton);
-
-                    // Botão Liberar
-                    const liberarCell = row.insertCell(5);
-                    const liberarButton = document.createElement('button');
-                    liberarButton.textContent = 'Liberar';
-                    liberarButton.setAttribute('data-horario-id', item.id);
-                    liberarButton.onclick = function () {
-                        const horarioId = this.getAttribute('data-horario-id');
-                        liberarHorario(horarioId);
-                    };
-                    liberarCell.appendChild(liberarButton);
-                });
-            });
-        };
-    </script>
+        </script>
+        
 </body>
-
 </html>

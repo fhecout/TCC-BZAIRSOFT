@@ -1,0 +1,64 @@
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  table {
+    width: 45%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  th, tr{
+    background-color: var(--cor-acizentada);
+    border: 1px solid var(--cor-laranja);
+    color: white;
+  }
+
+  button {
+    padding: 7px 15px;
+    border: 1px solid var(--cor-laranja);
+    background-color: var(--cor-laranja);
+    transition: 0.3s linear;
+    border-radius: 10px;
+  }
+
+  button:hover {
+    border: 1px solid var(--cor-laranja);
+    background-color: var(--cor-acizentada);
+    color: var(--cor-laranja);
+    cursor: pointer;
+  }

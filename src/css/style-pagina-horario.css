@@ -1,0 +1,61 @@
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
+#conteudo {
+    font-size: 0px;
+}
+
+.qrcode {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.idHorario {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    font-size: 25px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+button {
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--cor-acizentada);
+    background-color: var(--cor-acizentada);
+    color: var(--cor-laranja);
+}
+
+button:hover {
+    cursor: pointer;
+}

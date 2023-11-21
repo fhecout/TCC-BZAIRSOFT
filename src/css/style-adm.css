@@ -1,0 +1,61 @@
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: cover;
+    height: 100%;
+    color: #FF7300;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form {    
+    background-color: var(--cor-acizentada);
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0 40px 0;
+    padding: 20px;
+    gap: 10px;
+    border: 1px solid var(--cor-laranja);
+}
+
+h2:nth-child(n + 4){
+    color: var(--cor-acizentada);
+}
+
+
+button {
+    background-color: var(--cor-laranja);
+    color: var(--cor-acizentada);
+    border: 1px solid var(--cor-acizentada);
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: 0.3s linear;
+}
+
+button:hover {
+    background-color: var(--cor-acizentada);
+    border: 1px solid var(--cor-laranja);
+    color: var(--cor-laranja);
+    cursor: pointer;
+}

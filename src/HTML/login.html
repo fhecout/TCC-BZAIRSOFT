@@ -1,19 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/style-Login.css">
+    <link rel="stylesheet" href="../css/reset.css">
 </head>
 <body>
-    <h1>Tela login</h1>
-<form action="/login" method="post">
-    <input type="text" placeholder="Email" name="username">
-    <input type="password" placeholder="Senha" name="password">
-    <button>Enviar</button>
-    <li class="lista-cabecalho lista">
-        <a href="esqueceuSenha.html">Esqueci a Senha</a>
-    </li>
-</form>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    </header>
+    <div class="container">
+        <div class="main-container">
+            <div class="container-infos">
+                <p>FAÇA LOGIN PARA ACESSAR SUA CONTA</p>
+                <a href="./cadastro.html">Ainda não tenho uma conta</a>
+            </div>
+            <div class="container-login">
+                <p>LOGIN</p>
+                <form action="/login" method="post">
+                    <input id="email" type="text" placeholder="DIGITE SEU E-MAIL" name="username">
+                    <input id="senha" type="password" placeholder="DIGITE SUA SENHA" name="password">
+                    <button>LOGIN</button>
+                </form>
+                <a href="esqueceuSenha.html">Esqueci a Senha</a>
+                <a href="./cadastro.html" class="botao-cadastro">Ainda não tenho uma conta</a>
+            </div>
+        </div>
+        <a href="../HTML/loginAdm.html" class="adm">Fazer Login como Administrador</a>
+    </div>
 </body>
 </html>
+

@@ -5,36 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuração de Horários Diários</title>
-    <style>
-        .horario-linha {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
 
-        .horario-input {
-            margin-right: 10px;
-        }
+    <link rel="stylesheet" href="../css/style-configArena.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
 
-        table {
-            width: 5%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 
 <body>
+    <header>
+        <a href="../HTML/login.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    </header>
+    
     <h1>Configuração de Horários Diários</h1>
     <p>Defina os horários que serão adicionados automaticamente ao sistema todos os dias.</p>
     <div id="horarios-container">
@@ -42,7 +26,6 @@
             <thead>
                 <tr>
                     <th>Horário</th>
-                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,7 +33,7 @@
             </tbody>
         </table>
     </div>
-    <button onclick="adicionarLinhaHorario()">+</button>
+    <button onclick="adicionarLinhaHorario()">Adicionar Novo Horário</button>
 
     <script>
         // Função para adicionar uma nova linha de horário

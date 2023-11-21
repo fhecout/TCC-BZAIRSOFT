@@ -26,66 +26,47 @@ header a:nth-child(2):hover{
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 70vh;
-}
-
-.container h1 {
-    margin-bottom: 20px;
+    gap: 15px;
 }
 
 .container form {
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
-    border: 1px solid #FF7300;
-    padding: 50px;
+    border: 1px solid #ff7300;
+    padding: 25px;
     font-size: 20px;
-    background: rgba(41, 41, 41, 0.80);
 }
 
-.container form input {
-    margin-bottom: 20px;
-    padding: 5px 15px;
+.container form #username{
     border-radius: 75px;
     border: none;
-} 
-
-#cpf::placeholder, #email::placeholder,
-#senha::placeholder, #name::placeholder,
-#telefone::placeholder {
-    text-align: center;
-    color: #292929;
+    padding: 2px 25px;
 }
 
-form button {
+.container form button {
+    margin-top: 20px;
+    transition: 0.3s ease-in;
+    padding: 5px 15px;
     border-radius: 75px;
     border: 1px solid #fff;
+    color: #FF7300;
     background-color: #292929;
-    color: #ff7300;
     cursor: pointer;
-    font-size: 15px;
-    padding: 5px 0;
-    transition: 0.3s ease-in;
 }
 
-form button:hover {
-    border: 1px solid #ff7300;
-    background-color: #292929;
+.container form button:hover {
+    border: 1px solid #FF7300;
     color: #fff;
-    cursor: pointer;
 }
 
 @media (max-width: 475px){
     header {
-        margin-bottom: 10px;
         flex-direction: column;
-    }
-
-    .container h1 {
-        font-size: 30px;
-        margin-bottom: 0;
-    }
-
-    .container form {
-        padding: 15px 50px;
+        margin-bottom: 10px;
     }
 }
+
+
+

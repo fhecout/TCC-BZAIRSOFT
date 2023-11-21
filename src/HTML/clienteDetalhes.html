@@ -1,46 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Cliente</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      width: 80%;
-      margin: 20px auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      text-align: left;
-      padding: 8px;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-    th {
-      background-color: #4c77af;
-      color: white;
-    }
-  </style>
+  <link rel="stylesheet" href="../css/style-clientesDetalhes.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
 </head>
 
 <body>
+  <header>
+    <a href="../HTML/login.html">
+        <img src="../images/Logo.png" alt="Logo">
+    </a>
+</header>
+
   <div class="container">
     <h1>Detalhes do Cliente</h1>
-    <table border="1">
+    <table>
       <tr>
         <th>ID</th>
         <td id="clienteId"></td>

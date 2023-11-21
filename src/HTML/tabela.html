@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Horários Disponíveis</title>
+    <link rel="stylesheet" href="../css/style-tabela.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
+</head>
+<body>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+
+        <a href="login.html">
+            Voltar para página incial
+        </a>
+    </header>
+
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Dia</th>
+                    <th>Horário</th>
+                    <th>Disponibilidade</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-body">
+                <!-- Os dados da tabela serão inseridos aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="botoes">
+        <button id="bloquearHorarioBtn">Bloquear Horário</button>
+        <button id="adicionarHorarioBtn">Adicionar Horário</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabelaBody = document.getElementById('tabela-body');
+
+            function formatarData(data) {
+                const dataObj = new Date(data);
+                const dia = dataObj.getDate().toString().padStart(2, '0');
+                const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0');
+                const ano = dataObj.getFullYear().toString().substr(-2);
+                return `${dia}/${mes}/${ano}`;
+            }
+
+            function carregarTabela() {
+                fetch('/horarios')
+                    .then(response => response.json())
+                    .then(data => {
+                        tabelaBody.innerHTML = '';
+
+                        data.forEach(horario => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${horario.id}</td>
+                                <td>${formatarData(horario.dia)}</td>
+                                <td>${horario.horario}</td>
+                                <td>${horario.disp}</td>
+                            `;
+
+                            tabelaBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error('Erro ao carregar dados:', error));
+            }
+
+            carregarTabela();
+            });
+    </script>
+</body>
+</html>

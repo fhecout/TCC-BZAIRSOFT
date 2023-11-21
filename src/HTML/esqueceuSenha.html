@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esqueceu a Senha</title>
+    <title>Esqueci Minha Senha</title>
+
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/style-Esqueci-Senha.css">
 </head>
 <body>
-    <form action="/esqueceuSenha" method="post">
-        <H1>Esqueceu a senha</H1>
-        <p>Informe seu email:</p>
-        <input type="email" id="username" name="username">
-        <button type="submit">Enviar email</button>
-    </form>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+
+        <a href="./login.html">Voltar para Página Inicial</a>
+    </header>
+    <div class="container">
+        <H1>ESQUECEU A SENHA</H1>
+        <form action="/esqueceuSenha" method="post">
+            <p>Informe Seu E-mail:</p>
+            <input type="email" id="username" name="username">
+            <button type="submit">Enviar E-Mail</button>
+        </form>
+    </div>
 </body>
 </html>
