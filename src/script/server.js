@@ -317,6 +317,59 @@ app.post("/codigoValidacao", async (req, res) => {
   }
 });
 
+app.post("/AgendadorJogador", async (req, res) => {
+  const token = req.cookies.token; 
+
+  if (!token) {
+    return res.status(401).send("Token não fornecido.");
+  }
+
+  jwt.verify(token, "BZAirsoftArenaTCC", async (err, decoded) => {
+    if (err) {
+      return res.status(401).send("Token inválido.");
+    }
+
+    const username = decoded.username;
+    const Usuario = await db.query(
+      "SELECT cpf, id, nome FROM usuarios WHERE email = $1",
+      [username]
+    );
+
+    const userId = Usuario.rows[0].id;
+
+    if (Usuario.rowCount === 0) {
+      return res.status(404).send("Usuário não encontrado.");
+    }
+
+    const result = await db.query(
+      `SELECT hu.horario_id, hd.dia, hd.horario, hd.disp, hd.cliente_cpf
+      FROM horariosUsuarios hu
+      JOIN horarios_disponiveis hd ON hu.horario_id = hd.id
+      WHERE hu.usuario_id = $1;
+      `,
+      [userId]
+    );
+
+    const agendados = result.rows;
+
+  res.json({
+    agendados,
+  });
+});
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post("/horarios", async (req, res) => {
   const { dia } = req.body;
 
@@ -335,6 +388,23 @@ app.post("/horarios", async (req, res) => {
     horarios,
   });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get("/pagina-horario", (req, res) => {
   const horarioId = req.query.id;
@@ -362,8 +432,6 @@ app.get("/pagina-horario", (req, res) => {
     if (Usuario.rowCount === 0) {
       return res.status(404).send("Usuário não encontrado.");
     }
-
-    // const nomeUsuario = finalHtml.replace('<div class="nome">Nome:</div>',`<div class="nome">Nome:${Usuario.nome}</div>`)
 
     db.query(
       "SELECT horario, dia, disp, valor, id from horarios_disponiveis where id=$1",
@@ -923,11 +991,6 @@ app.post("/bloquearhorario", async (req, res) => {
     res.status(500).send("Erro ao bloquear horário.");
   }
 });
-
-
-
-
-
 
 
 

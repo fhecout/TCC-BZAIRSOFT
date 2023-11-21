@@ -2,21 +2,40 @@
 <html>
 <head>
     <title>QR Code PIX</title>
+
+    <style>
+        #conteudo {
+            font-size: 0px;
+        }
+
+        .qrcode {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .idHorario {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .status-disponivel {
+            color: green;
+        }
+
+        .status-analise {
+            color: yellow;
+        }
+
+        .status-bloqueado {
+            color: red;
+        }
+    </style>
 </head>
-
-<link rel="stylesheet" href="../css/style-pagina-horario.css">
-<link rel="stylesheet" href="../css/variables.css">
-<link rel="stylesheet" href="../css/reset.css">
 <body>
-    <header>
-        <a href="../../index.html">
-            <img src="../images/Logo.png" alt="Logo">
-        </a>
-
-        <a href="login.html">
-            Voltar para página incial
-        </a>
-    </header>
 
     <div class="idHorario"> ID do Horario: </div>
     <img class="qrcode" src="https://gerarqrcodepix.com.br/api/v1?nome=BZAirsoft&cidade=Curitiba&chave=feliperafaeldocouto@hotmail.com&valor=00.00&saida=qr" alt="QR Code PIX">
@@ -38,6 +57,8 @@
         <input type="hidden" name="horarioId" value="ID_DO_HORARIO_AQUI">
         <button id="AgendarHorario">Agendar Horário</button>
     </form>
+    
+    <input type="checkbox">Aceite os<a href="termos.html">Termos de Compromisso</a>
 
 </body>
 </html>
