@@ -25,6 +25,10 @@ header {
     display: flex;
 }
 
+.container a {
+    color: #FFF;
+}
+
 .container-infos, .container-login {
     width: 400px;
     height: 500px;
@@ -104,11 +108,6 @@ header {
 
 .container-login .botao-cadastro{
     display: none;
-}
-
-.adm {
-    gap: 10px;
-    transition: 0.3s ease-in;
 }
 
 @media(max-width: 900px){

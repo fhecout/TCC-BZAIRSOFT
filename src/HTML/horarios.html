@@ -4,20 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Horários Disponíveis</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <style>
+
+body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
         /* Estilo para o modal */
         .modal {
             display: none;
             position: fixed;
+            flex-direction: column;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
+            background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+            background-size: auto;
             padding: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             z-index: 9999;
-            width: 900px;
-            height: 400px;
+            width: 600px;
+            height: 500px;
             border-radius: 10px;
         }
 
@@ -31,17 +60,59 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 9998;
-            
         }
+
+        .formulario {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #292929;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border-radius: 10px;
+            background-color: var(--cor-acizentada);
+            color: var(--cor-laranja);
+            border: 1px solid #ff7300;
+            transition: 0.3s linear;
+        }
+
+        button:hover {
+            cursor: pointer;
+            color: #fff;
+            background-color: #ff7300;
+        }
+
     </style>
 </head>
 <body>
-    <a href="/html/AgendadoJogador.html">Teste</a>
-    <form id="form" method="POST" action="/horarios">
-        <label>Dia: <input type="date" name="dia" id="dia"></label>
-        <button type="submit">Buscar</button>
-    </form>
-    <div id="horarios"></div>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+
+        <a href="login.html">
+            Voltar para página incial
+        </a>
+    </header>
+    <!-- <a href="/html/AgendadoJogador.html">Teste</a> -->
+    <div class="formulario">
+        <form id="form" method="POST" action="/horarios">
+            <label>Dia: <input type="date" name="dia" id="dia"></label>
+            <button type="submit">Buscar</button>
+            <div class="mensagem"></div>
+        </form>
+        <div id="horarios"></div>
+    </div>
 
 
     <!-- Modal -->
@@ -54,11 +125,6 @@
     <!-- Sobreposição de fundo do modal -->
     <div id="modal-overlay" class="modal-overlay"></div>
 
-    <style>
-        .modal {
-            border: 1px solid black;
-        }
-    </style>
 
     <script>
 
@@ -100,7 +166,7 @@
                     button.textContent = horario.horario;
                     button.addEventListener('click', () => {
                         // Carregar e exibir o modal ao clicar no botão
-                        loadAndShowModal('/pagina-horario?id=' + horario.id);
+                        loadAndShowModal('/pagina-horario?id= ' + horario.id);
                     });
                     horariosDiv.appendChild(button);
                 }
@@ -118,8 +184,8 @@
             const response = await fetch(url);
             const htmlContent = await response.text();
             modalContent.innerHTML = htmlContent;
-            modal.style.display = 'block';
-            modalOverlay.style.display = 'block';
+            modal.style.display = 'flex';
+            modalOverlay.style.display = 'flex';
 
             // Adicione um evento de clique para copiar o conteúdo ao abrir o modal
             const copiarBotao = document.getElementById('copiarBotao');
@@ -154,12 +220,35 @@
                     button.textContent = horario.horario;
                     button.addEventListener('click', () => {
                         // Carregar e exibir o modal ao clicar no botão
-                        loadAndShowModal('/pagina-horario?id=' + horario.id);
+                        loadAndShowModal('/pagina-horario?id= ' + horario.id);
                     });
                     horariosDiv.appendChild(button);
                 }
             });
         }
+
+        form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const dia = form.elements['dia'].value;
+        const mensagemDiv = document.querySelector('.mensagem');
+        mensagemDiv.textContent = ''; // Limpa mensagens anteriores
+
+        const response = await fetch('/horarios', {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(form))
+        });
+
+        const data = await response.json();
+
+        // Verifica se há uma mensagem de erro e a exibe
+        if (data.mensagem) {
+            mensagemDiv.textContent = data.mensagem;
+            mensagemDiv.style.color = 'red'; // Altera a cor da mensagem para vermelho (ou outra cor de sua escolha)
+            return; // Encerra a execução da função
+        }
+    }
+        )
 
         // Chame a função ao carregar a página
         document.addEventListener('DOMContentLoaded', carregarHorariosAtuais);

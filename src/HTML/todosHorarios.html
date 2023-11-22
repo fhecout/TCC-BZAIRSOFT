@@ -15,11 +15,14 @@
             border-collapse: collapse;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
@@ -104,12 +107,34 @@
         .confirm-btn:hover {
             background-color: darkgreen;
         }
+
+        .notification-toast {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: rgb(0, 156, 21);
+        color: white;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+    }
+
+    .notification-toast.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
     </style>
 </head>
 
 <body>
     <h1>Todos os Horários</h1>
-    
+
     <div class="filter-section">
         <label for="filtroDisponibilidade">Filtrar por Disponibilidade:</label>
         <select id="filtroDisponibilidade">
@@ -186,11 +211,11 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             fetchHorarios();
-            
+
             document.getElementById('filtroDisponibilidade').addEventListener('change', function () {
                 applyFilters();
             });
-            
+
             document.getElementById('filtroData').addEventListener('change', function () {
                 applyFilters();
             });
@@ -233,12 +258,12 @@
             }
 
             function populateTable(horarios) {
-            const tableBody = document.getElementById('horariosTable').querySelector('tbody');
-            tableBody.innerHTML = '';
-            horarios.forEach(horario => {
-                const disponibilidadeTexto = getDisponibilidadeTexto(horario.disp);
-                const row = tableBody.insertRow();
-                row.innerHTML = `
+                const tableBody = document.getElementById('horariosTable').querySelector('tbody');
+                tableBody.innerHTML = '';
+                horarios.forEach(horario => {
+                    const disponibilidadeTexto = getDisponibilidadeTexto(horario.disp);
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
                     <td>${horario.id}</td>
                     <td>${formatDate(horario.dia)}</td>
                     <td>${horario.horario}</td>
@@ -259,7 +284,7 @@
 
 
         function getDisponibilidadeTexto(disp) {
-            switch(disp) {
+            switch (disp) {
                 case 1: return 'Disponível';
                 case 2: return 'Em Análise';
                 case 3: return 'Bloqueado';
@@ -271,14 +296,14 @@
 
         function handleAction(action, id) {
             function handleAction(action, id, clienteCpf) {
-    if (action === 'bloquear' && clienteCpf) {
-        // Não fazer nada se o cliente_cpf estiver presente
-        return;
-    }
-    currentId = id;
-    showModal(`modal${capitalizeFirstLetter(action)}`);
-}
-            
+                if (action === 'bloquear' && clienteCpf) {
+                    // Não fazer nada se o cliente_cpf estiver presente
+                    return;
+                }
+                currentId = id;
+                showModal(`modal${capitalizeFirstLetter(action)}`);
+            }
+
             currentId = id;
             showModal(`modal${capitalizeFirstLetter(action)}`);
         }
@@ -295,41 +320,69 @@
             document.getElementById(modalId).style.display = "none";
         }
 
-        async function executeAction(action) {
-            closeModal(`modal${capitalizeFirstLetter(action)}`);
-            let endpoint = '';
-            switch (action) {
-                case 'bloquear':
-                    endpoint = '/bloquear-horarios';
-                    window.location.reload(true);
-                    break;
-                case 'agendar':
-                    endpoint = '/agendar-horario';
-                    window.location.reload(true);
-                    break;
-                case 'liberar':
-                    endpoint = '/liberarHorarios';
-                    window.location.reload(true);
-                    break;
-                case 'desmarcar':
-                    endpoint = '/desmarcar-horario';
-                    window.location.reload(true);
-                    break;
-            }
+        function showNotification(message) {
+            const toast = document.createElement('div');
+            toast.className = 'notification-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            toast.classList.add('show');
 
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ horarioId: currentId }),
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                fetchHorarios();
-            } else {
-                alert('Ação falhou: ' + (result.message || 'Erro desconhecido'));
-            }
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
+
+
+        async function executeAction(action) {
+        closeModal(`modal${capitalizeFirstLetter(action)}`);
+        let endpoint = '';
+        let actionMessage = '';
+        switch (action) {
+            case 'bloquear':
+                endpoint = '/bloquear-horarios';
+                actionMessage = 'Horário bloqueado com sucesso!';
+                break;
+            case 'agendar':
+                endpoint = '/agendar-horario';
+                actionMessage = 'Horário agendado com sucesso!';
+                break;
+            case 'liberar':
+                endpoint = '/liberarHorarios';
+                actionMessage = 'Horário liberado com sucesso!';
+                break;
+            case 'desmarcar':
+                endpoint = '/desmarcar-horario';
+                actionMessage = 'Horário desmarcado com sucesso!';
+                break;
+        }
+
+        // Armazenar a mensagem para ser exibida após o recarregamento
+        localStorage.setItem('actionMessage', actionMessage);
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ horarioId: currentId }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            window.location.reload(true);
+        } else {
+            alert('Ação falhou: ' + (result.message || 'Erro desconhecido'));
+        }
+    }
+
+    // Verificar e exibir a mensagem de notificação após recarregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const actionMessage = localStorage.getItem('actionMessage');
+        if (actionMessage) {
+            showNotification(actionMessage);
+            localStorage.removeItem('actionMessage');
+        }
+
+        fetchHorarios();
+    });
     </script>
 </body>
 

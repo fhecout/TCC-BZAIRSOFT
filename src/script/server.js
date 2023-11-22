@@ -359,17 +359,6 @@ app.post("/AgendadorJogador", async (req, res) => {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
 app.post("/horarios", async (req, res) => {
   const { dia } = req.body;
 
@@ -377,15 +366,27 @@ app.post("/horarios", async (req, res) => {
     res.send("html/horarios.html");
   }
 
+  const agora = new Date();
+  const horaAtual = agora.toISOString().slice(11, 19);
+  const hoje = new Date().toISOString().slice(0, 10);
+
+  let mensagem = "";
+
+  // Verificar se a data inserida é menor que a data atual
+  if (new Date(dia) < new Date(hoje)) {
+    mensagem = "INSIRA UMA DATA MAIOR QUE A ATUAL";
+  }
+
+
   const result = await db.query(
-    "SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=1",
-    [dia]
+    "SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=1 and horario >= $2 ",
+    [dia, horaAtual]
   );
 
   const horarios = result.rows;
 
   res.json({
-    horarios,
+    horarios, mensagem
   });
 });
 
@@ -721,6 +722,22 @@ app.get("/atualizarPerfil", (req, res) => {
 
 //ADMINISTRAÇÃO
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post("/gerar-pdf", async (req, res) => {
   try {
     const results = await db.query("SELECT * FROM usuarios");
@@ -735,35 +752,105 @@ app.post("/gerar-pdf", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Rota para adicionar horários
 app.post("/adicionar-horario", async (req, res) => {
   const { dia, horario, valor } = req.body;
 
   try {
     const query = await db.query(
-      "select * from horarios_disponiveis where dia = $1 and horario = $2 and disp=1",
+      "SELECT * FROM horarios_disponiveis WHERE dia = $1 AND horario = $2 AND disp = 1",
       [dia, horario]
     );
-    if (!query) {
+
+    // Verifique se o horário já existe
+    if (query.rows.length === 0) {
       // Insira o novo horário na tabela horarios_disponiveis
       await db.query(
         "INSERT INTO horarios_disponiveis (dia, horario, disp, valor) VALUES ($1, $2, 1, $3)",
         [dia, horario, valor]
       );
+
+      // Insira o log da inclusão
       await db.query(
-        "INSERT INTO log_alteracoes (acao, dia, horario, valor , data_hora) VALUES ($1, $2, $3, $4, NOW())",
+        "INSERT INTO log_alteracoes (acao, dia, horario, valor, data_hora) VALUES ($1, $2, $3, $4, NOW())",
         ["Inclusao", dia, horario, valor]
       );
-    } else {
-      res.send("Horario ja esta inserido");
-    }
 
-    res.redirect("/adm.html"); // Redirecione de volta para a página de administração
+      // Envie uma resposta de sucesso
+      res.send("Horário adicionado com sucesso");
+    } else {
+      // Envie uma resposta de erro se o horário já existir
+      res.send("Horário já está inserido");
+    }
   } catch (error) {
-    console.error("Erro ao adicionar horário:", error);
-    res.status(500).send("Erro ao adicionar horário.");
+    // Envie uma resposta de erro em caso de falha na execução
+    res.status(500).send("Erro ao adicionar horário");
   }
 });
+
+app.post('/bloquear-horario-Jogador', async (req, res) => {
+  const { CPF, observacao, dia, horario, senha, comprovante } = req.body;
+
+  try {
+
+    const senhaNoBanco = await db.query('SELECT * from administrador where senha = $1', [senha]);
+
+
+    if (senhaNoBanco.rows.length > 0) {
+      const result = await db.query('UPDATE horarios_disponiveis SET disp = 3, cliente_cpf = $1 WHERE  dia = $2 AND horario = $3 ', [CPF,  dia, horario]);
+      await db.query('INSERT INTO log_alteracoes (acao, observacao, dia, horario, data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Bloqueio de Horário', observacao, dia, horario]);
+
+      res.send("Horário bloqueado com sucesso");
+
+    } else {
+      res.status(401).send('Senha de admin incorreta.');
+    }
+  } catch (error) {
+    console.error('Erro ao bloquear horário:', error);
+    res.status(500).send('Erro ao bloquear horário.');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Rota para gerar relatório com filtro
 app.post("/gerar-relatorio", async (req, res) => {
@@ -790,6 +877,19 @@ app.post("/gerar-relatorio", async (req, res) => {
     res.status(500).send("Erro ao gerar relatório.");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Rota para gerar relatório em uma planilha Excel
 app.post("/gerar-relatorio-excel", async (req, res) => {
@@ -858,6 +958,17 @@ app.post("/gerar-relatorio-excel", async (req, res) => {
     res.status(500).send("Erro ao gerar relatório.");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
 
 // Rota para gerar relatório em uma planilha Excel com informações de log, dias e horários
 app.post("/gerar-relatorio-log-excel", async (req, res) => {
@@ -1163,6 +1274,7 @@ app.post("/agendar-horario", async (req, res) => {
       "UPDATE horarios_disponiveis SET disp = 3 WHERE id = $1 and disp=2",
       [horarioId]
     );
+    
 
     res.json({ success: true });
   } catch (error) {

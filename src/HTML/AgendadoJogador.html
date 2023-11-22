@@ -5,7 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendador Jogador</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <style>
+        body {
+    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
+    background-size: auto;
+    height: 100vh;
+    color: #FF7300;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #292929;
+    text-decoration: none;
+    gap: 20px;
+}
+
+header a:nth-child(2){
+    color: #fff;
+    transition: 0.3s ease-in;
+}
+
+header a:nth-child(2):hover{
+    color: #ff7300;
+}
+
         #agendados-container {
             display: flex;
             flex-wrap: wrap;
@@ -25,10 +51,33 @@
         .horario-card p {
             margin: 5px 0;
         }
-    </style>
+        h1 {
+            text-align: center;
+        }
+        #agendados-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .horario-card {
+            background-color: #292929;
+            color: #fff;
+        }
+        </style>
 </head>
 
 <body>
+    <header>
+        <a href="../../index.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+
+        <a href="login.html">
+            Voltar para página incial
+        </a>
+    </header>
     <h1>Horários Agendados</h1>
     <div id="agendados-container"></div>
     <script>
