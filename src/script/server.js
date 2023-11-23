@@ -47,6 +47,24 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/login.html"));
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Rota para a página de teste depois do login (teste.html)
 app.get("/teste", async (req, res) => {
   const token = req.cookies.token; // Obtenha o token do cookie
@@ -90,6 +108,23 @@ app.get("/teste", async (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.get("/codigoValidacao", (req, res) => {
   const username = req.query.username;
   res.render(path.join(absolutePath, "html/token.html"), {
@@ -97,6 +132,21 @@ app.get("/codigoValidacao", (req, res) => {
     codigoValidacao,
   });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get("/adm", (req, res) => {
   res.render(path.join(absolutePath, "html/adm.html"));
@@ -127,15 +177,47 @@ app.get("/gerar-pdf", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
 app.get("/logout", (req, res) => {
   res.clearCookie("token"); // Remova o cookie de token
   res.redirect("/login"); // Redirecione o usuário de volta para a página de login
 });
 
+
+
+
+
+
+
 // Rota para servir o arquivo tabela.html
 app.get("/tabela.html", (req, res) => {
   res.sendFile(path.join(absolutePath, "tabela.html"));
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get("/horarios", async (req, res) => {
   try {
@@ -197,6 +279,16 @@ app.get("/horarios", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
 app.post("/cadastro", async (req, res) => {
   const { username, senha, nome, cpf, telefone } = req.body;
   const CadastroExiste = await VerificaCadastro(cpf, username);
@@ -207,6 +299,23 @@ app.post("/cadastro", async (req, res) => {
     res.redirect(`html/token.html?username=${username}`);
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -234,6 +343,15 @@ app.post("/login", async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
 app.post("/loginAdm", async (req, res) => {
   const { username, senha } = req.body;
 
@@ -247,7 +365,16 @@ app.post("/loginAdm", async (req, res) => {
 });
 
 
-app.post
+
+
+
+
+
+
+
+
+
+
 
 app.post("/esqueceuSenha", async (req, res) => {
   const { username } = req.body;
@@ -291,6 +418,19 @@ app.post("/esqueceuSenha", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post("/codigoValidacao", async (req, res) => {
   const { codigoValidacao, username } = req.body;
 
@@ -299,6 +439,18 @@ app.post("/codigoValidacao", async (req, res) => {
     codigoValidacao,
     username
   );
+
+
+
+
+
+
+
+
+
+
+
+
 
   if (codigoValidacaoValido) {
     try {
@@ -316,6 +468,25 @@ app.post("/codigoValidacao", async (req, res) => {
     res.send("codigoValidacao inválido ou não corresponde ao usuário");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post("/AgendadorJogador", async (req, res) => {
   const token = req.cookies.token; 
@@ -357,6 +528,18 @@ app.post("/AgendadorJogador", async (req, res) => {
   });
 });
 })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.post("/horarios", async (req, res) => {
@@ -542,6 +725,15 @@ app.get("/pagina-horario", (req, res) => {
       });
   });
 
+
+
+
+
+
+
+
+
+
   app.post("/agendar", async (req, res) => {
     const { horarioId } = req.body;
     const token = req.cookies.token; // Obtenha o token do cookie
@@ -611,6 +803,18 @@ app.get("/pagina-horario", (req, res) => {
   })
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
 // Rota para a página de perfil do usuário
 app.get("/perfil", async (req, res) => {
   const token = req.cookies.token; // Obtenha o token do cookie
@@ -671,6 +875,21 @@ app.get("/perfil", async (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Rota para atualizar as informações do usuário
 app.post("/atualizar-perfil", async (req, res) => {
   const { nome, email, telefone, senha } = req.body;
@@ -720,21 +939,10 @@ app.get("/atualizarPerfil", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/atualizarPerfil.html"));
 });
 
+
+
+
 //ADMINISTRAÇÃO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -806,6 +1014,20 @@ app.post("/adicionar-horario", async (req, res) => {
     res.status(500).send("Erro ao adicionar horário");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post('/bloquear-horario-Jogador', async (req, res) => {
   const { CPF, observacao, dia, horario, senha, comprovante } = req.body;
@@ -1109,6 +1331,16 @@ app.post("/bloquearhorario", async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
 app.post("/liberarHorario", async (req, res) => {
   try {
     const horarioId = req.body.horarioId;
@@ -1164,6 +1396,15 @@ app.get("/cliente-detalhes/:id", async (req, res) => {
     res.status(500).send("Erro ao obter os detalhes do cliente.");
   }
 });
+
+
+
+
+
+
+
+
+
 
 app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
   const idJogador = req.params.id;
@@ -1221,6 +1462,15 @@ app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
 // Obter todos os horários
 app.get("/todosHorarios", async (req, res) => {
   try {
@@ -1249,6 +1499,15 @@ app.get("/todosHorarios", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
 // Bloquear horário
 app.post("/bloquear-horarios", async (req, res) => {
   try {
@@ -1264,6 +1523,18 @@ app.post("/bloquear-horarios", async (req, res) => {
     res.status(500).send("Erro ao liberar horário.");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Agendar horário
 app.post("/agendar-horario", async (req, res) => {
@@ -1283,6 +1554,18 @@ app.post("/agendar-horario", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
 // Liberar horário
 app.post("/liberarHorarios", async (req, res) => {
   try {
@@ -1297,6 +1580,18 @@ app.post("/liberarHorarios", async (req, res) => {
     res.status(500).send("Erro ao liberar horário.");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Desmarcar horÃ¡rio
 app.post('/desmarcar-horario', async (req, res) => {
@@ -1338,6 +1633,16 @@ app.post('/desmarcar-horario', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
 // Pagina de configuração
 
 // Rota para obter horários configurados
@@ -1349,6 +1654,13 @@ app.get("/HorarioDiario", async (req, res) => {
     res.status(500).send("Erro no servidor ao obter horários.");
   }
 });
+
+
+
+
+
+
+
 
 // Rota para adicionar um novo horário
 app.post("/HorarioDiario", async (req, res) => {
@@ -1363,6 +1675,14 @@ app.post("/HorarioDiario", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
 app.delete("/HorarioDiario/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -1372,6 +1692,13 @@ app.delete("/HorarioDiario/:id", async (req, res) => {
     res.status(500).send("Erro no servidor ao remover horário.");
   }
 });
+
+
+
+
+
+
+
 
 // Função que busca e insere horários
 async function inserirHorariosDisponiveis() {
@@ -1386,6 +1713,10 @@ async function inserirHorariosDisponiveis() {
     console.error('Erro ao inserir horários diários:', error);
   }
 }
+
+
+
+
 
 // Agendar a tarefa para rodar todos os dias às 11:50 da manhã
 cron.schedule('0 0 * * *', () => {

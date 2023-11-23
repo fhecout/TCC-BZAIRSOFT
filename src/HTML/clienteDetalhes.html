@@ -1,105 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detalhes do Cliente</title>
+  <title>Detalhe Clientes</title>
+
   <link rel="stylesheet" href="../css/style-clientesDetalhes.css">
+  <link rel="stylesheet" href="../css/style-headerAgendamento.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
 </head>
 
 <body>
-  <header>
-    <a href="../HTML/login.html">
-        <img src="../images/Logo.png" alt="Logo">
-    </a>
-</header>
+    <header>
+        <a href="../../index.html">
+          <img src="../images/Logo.png" alt="Logo">
+        </a>
 
-  <div class="container">
-    <h1>Detalhes do Cliente</h1>
-    <table>
-      <tr>
-        <th>ID</th>
-        <td id="clienteId"></td>
-      </tr>
-      <tr>
-        <th>Nome</th>
-        <td id="clienteNome"></td>
-      </tr>
-      <tr>
-        <th>CPF</th>
-        <td id="clienteCpf"></td>
-      </tr>
-      <tr>
-        <th>Email</th>
-        <td id="clienteEmail"></td>
-      </tr>
-      <tr>
-        <th>Telefone</th>
-        <td id="clienteTelefone"></td>
-      </tr>
-      <tr>
-        <th>Token Validado</th>
-        <td id="clienteTokenValidado"></td>
-      </tr>
-      <th>Ações</th>
-        <td><button id="blockButton" class="block-button">Bloquear/Desbloquear Jogador</button></td>
-    </table>
-  </div>
+        <a href="login.html">
+          Voltar para página incial
+        </a>
+    </header>
 
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      if (id) {
-        fetch(`/cliente-detalhes/${id}`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Detalhes do cliente não encontrados.');
-            }
-            return response.json();
-          })
-          .then(data => {
-            document.getElementById('clienteId').textContent = data.id;
-            document.getElementById('clienteNome').textContent = data.nome;
-            document.getElementById('clienteCpf').textContent = data.cpf;
-            document.getElementById('clienteEmail').textContent = data.email;
-            document.getElementById('clienteTelefone').textContent = data.telefone;
-            document.getElementById('clienteTokenValidado').textContent = data.tokenvalidado ? 'Sim' : 'Não';
-          })
-          .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao carregar detalhes do cliente.');
-          });
-      }
-    };
+    <div class="container">
+        <h1>Detalhes do Cliente</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <td id="clienteId"></td>
+            </tr>
+            <tr>
+                <th>Nome</th>
+                <td id="clienteNome"></td>
+            </tr>
+            <tr>
+                <th>CPF</th>
+                <td id="clienteCpf"></td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td id="clienteEmail"></td>
+            </tr>
+            <tr>
+                <th>Telefone</th>
+                <td id="clienteTelefone"></td>
+            </tr>
+            <tr>
+                <th>Token Validado</th>
+                <td id="clienteTokenValidado"></td>
+            </tr>
+            <th>Ações</th>
+            <td>
+                <button id="blockButton" class="block-button">Bloquear/Desbloquear Jogador</button>
+            </td>
+        </table>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const blockButton = document.getElementById('blockButton');
-      blockButton.addEventListener('click', function () {
-        const playerId = document.getElementById('clienteId').textContent;
-        const isBlocked = blockButton.textContent.includes('Desbloquear');
-
-        fetch(`/atualizar-bloqueio-jogador/${playerId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ bloqueado: !isBlocked }),
-        })
-          .then(response => response.json())
-          .then(data => {
-            blockButton.textContent = isBlocked ? 'Bloquear Jogador' : 'Desbloquear Jogador';
-          })
-          .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao atualizar o status do jogador.');
-          });
-      });
-    });
-  </script>
+  <script src="../script/clienteDetalhes.js"></script>
 </body>
-
 </html>

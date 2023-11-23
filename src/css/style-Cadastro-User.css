@@ -1,26 +1,3 @@
-body {
-    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
-    background-size: auto;
-    height: 100vh;
-    color: #FF7300;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #292929;
-}
-
-header a:nth-child(2){
-    color: #fff;
-    transition: 0.3s ease-in;
-}
-
-header a:nth-child(2):hover{
-    color: #ff7300;
-}
-
 .container {
     display: flex;
     align-items: center;

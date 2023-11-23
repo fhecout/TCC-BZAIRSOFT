@@ -1,26 +1,5 @@
 body {
-    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
-    background-size: cover;
     height: 100%;
-    color: #FF7300;
-    text-align: center;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    gap: 20px;
-}
-
-header a:nth-child(2){
-    color: #fff;
-    transition: 0.3s ease-in;
-}
-
-header a:nth-child(2):hover{
-    color: #ff7300;
 }
 
 .container {

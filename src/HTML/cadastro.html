@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário</title>
   <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/style-headerAgendamento.css">
   <link rel="stylesheet" href="../css/style-Cadastro-User.css">
 </head>
 <body>
@@ -13,7 +14,9 @@
             <img src="../images/Logo.png" alt="Logo">
         </a>
 
-        <a href="./login.html">Voltar para Página Inicial</a>
+        <a href="login.html">
+            Voltar para página incial
+        </a>
     </header>
     <div class="container">
         <h1>CADASTRO DE USUÁRIO</h1>
@@ -36,42 +39,7 @@
             <button type="submit">CADASTRAR</button>
         </form>
     </div>
+    <script src="../script/cadastro.js"></script>
 
-<script>
-    // Função para formatar o CPF com pontos (xxx.xxx.xxx-xx)
-function formatCPF(cpf) {
-  return cpf.replace(/\D/g, '')
-    .replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-}
-
-// Função para calcular o dígito verificador do CPF
-function calcularDigitoVerificador(cpf) {
-  const numeros = cpf.slice(0, 9).split('').map(Number);
-  const primeiroDigito = calcularDigito(numeros, 10);
-  numeros.push(primeiroDigito);
-  const segundoDigito = calcularDigito(numeros, 11);
-  return `${primeiroDigito}${segundoDigito}`;
-}
-
-// Função auxiliar para calcular o dígito verificador
-function calcularDigito(numeros, peso) {
-  const total = numeros.reduce((acc, num) => acc + num * peso--, 0);
-  const resto = total % 11;
-  return resto < 2 ? 0 : 11 - resto;
-}
-
-// Obtenha o elemento de entrada de CPF e o elemento do dígito verificador
-const cpfInput = document.getElementById('cpf');
-const digitoVerificador = document.getElementById('digito-verificador');
-
-// Adicione um ouvinte de evento de entrada ao campo de CPF
-cpfInput.addEventListener('input', () => {
-  const cpf = cpfInput.value;
-  const cpfFormatado = formatCPF(cpf);
-  const digito = calcularDigitoVerificador(cpf);
-
-  cpfInput.value = cpfFormatado;
-});
-  </script>
 </body>
 </html>
