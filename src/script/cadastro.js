@@ -26,3 +26,5 @@ cpfInput.addEventListener('input', () => {
     const digito = calcularDigitoVerificador(cpf);
     cpfInput.value = cpfFormatado;
 });
+
+

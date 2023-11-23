@@ -107,29 +107,9 @@
         .confirm-btn:hover {
             background-color: darkgreen;
         }
-
-        .notification-toast {
-        visibility: hidden;
-        min-width: 250px;
-        margin-left: -125px;
-        background-color: rgb(0, 156, 21);
-        color: white;
-        text-align: center;
-        border-radius: 2px;
-        padding: 16px;
-        position: fixed;
-        z-index: 1;
-        left: 50%;
-        bottom: 30px;
-        font-size: 17px;
-    }
-
-    .notification-toast.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
     </style>
+
+    <link rel="stylesheet" href="../css/popUp.css">
 </head>
 
 <body>
@@ -322,7 +302,7 @@
 
         function showNotification(message) {
             const toast = document.createElement('div');
-            toast.className = 'notification-toast';
+            toast.className = 'toast';
             toast.textContent = message;
             document.body.appendChild(toast);
             toast.classList.add('show');

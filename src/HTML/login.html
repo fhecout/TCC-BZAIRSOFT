@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../css/style-Login.css">
     <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/popUp.css">
 </head>
 <body>
     <header>
@@ -28,11 +29,57 @@
                     <button>LOGIN</button>
                 </form>
                 <a href="esqueceuSenha.html">Esqueci a Senha</a>
-                <a href="./cadastro.html" class="botao-cadastro">Ainda não tenho uma conta</a>
+
+                <a href="/cadastro.html" class="botao-cadastro">Ainda não tenho uma conta</a>
             </div>
         </div>
         <a href="../HTML/loginAdm.html" class="adm">Fazer Login como Administrador</a>
     </div>
+
+    <script>
+        function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000); // O pop-up será removido após 3 segundos
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formLogin = document.querySelector('form[action="/login"]');
+    if (formLogin) {
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(formLogin);
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                if (!response.ok) {
+                    const message = await response.text();
+                    showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
+                } else {
+
+                    window.location.href = '../HTML/horarios.html';
+
+                }
+            } catch (error) {
+                showToast('Erro ao tentar fazer login'); // Mostrar erro se a solicitação falhar
+            }
+        });
+    }
+});
+
+
+    </script>
 </body>
 </html>
 

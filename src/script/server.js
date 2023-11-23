@@ -293,7 +293,7 @@ app.post("/cadastro", async (req, res) => {
   const { username, senha, nome, cpf, telefone } = req.body;
   const CadastroExiste = await VerificaCadastro(cpf, username);
   if (CadastroExiste) {
-    res.send("CPF ou Email ja foram informados");
+    res.status(401).send("CPF ou Email ja foram informados");
   } else {
     cadastrarUsuario(username, senha, nome, cpf, telefone);
     res.redirect(`html/token.html?username=${username}`);
@@ -338,7 +338,7 @@ app.post("/login", async (req, res) => {
       res.redirect(`html/token.html?username=${username}`);
     }
   } else {
-    res.send("Usuário inválido.");
+    res.status(401).send("Usuário inválido."); // Enviar resposta com status de erro
   }
 });
 
@@ -439,19 +439,6 @@ app.post("/codigoValidacao", async (req, res) => {
     codigoValidacao,
     username
   );
-
-
-
-
-
-
-
-
-
-
-
-
-
   if (codigoValidacaoValido) {
     try {
       const query =
@@ -562,8 +549,8 @@ app.post("/horarios", async (req, res) => {
 
 
   const result = await db.query(
-    "SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=1 and horario >= $2 ",
-    [dia, horaAtual]
+    "SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=1",
+    [dia]
   );
 
   const horarios = result.rows;
@@ -766,9 +753,7 @@ app.get("/pagina-horario", (req, res) => {
         // Verifique se o cliente está bloqueado
         if (bloqueado) {
           // Se bloqueado, não mude disp e informe o cliente
-          return res
-            .status(403)
-            .send("Cliente bloqueado. Não é possível agendar o horário.");
+          return res.send('Voce esta Bloqueado, não pode fazer agendamentos de horarios')
         } else {
           // Se não estiver bloqueado, tente atualizar o horário
           const queryResult = await db.query(
@@ -934,6 +919,9 @@ app.post("/atualizar-perfil", async (req, res) => {
     }
   });
 });
+
+
+
 
 app.get("/atualizarPerfil", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/atualizarPerfil.html"));
