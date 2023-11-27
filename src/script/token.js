@@ -27,9 +27,22 @@ formCodigoValidacao.addEventListener('submit', async (e) => {
             showToast(message); // Mostrar o pop-up com a mensagem de erro ou sucesso
         } else {
             // Aqui você pode redirecionar o usuário ou mostrar uma mensagem de sucesso
-            window.location.href = `html/horarios.html`;
+            window.location.href = `../html/horarios.html`;
         }
     } catch (error) {
         showToast('Erro ao processar a validação do código'); // Mostrar erro se a solicitação falhar
     }
 });
+
+  // Função showToast
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000); // O pop-up será removido após 3 segundos
+}

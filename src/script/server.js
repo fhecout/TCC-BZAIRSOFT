@@ -47,6 +47,11 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/login.html"));
 });
 
+// Rota para a página de login (login.html)
+app.get("/bloqueado", (req, res) => {
+  res.sendFile(path.join(absolutePath, "html/bloqueado.html"));
+});
+
 
 
 
@@ -410,7 +415,7 @@ app.post("/esqueceuSenha", async (req, res) => {
         res.status(404).send("Senha não encontrada no banco de dados.");
       }
     } else {
-      res.status(404).send("E-mail não encontrado no banco de dados.");
+      res.status(404).send("E-mail não encontrado.");
     }
   } catch (error) {
     console.error("Erro ao processar a solicitação de esqueceuSenha:", error);
@@ -452,7 +457,7 @@ app.post("/codigoValidacao", async (req, res) => {
       res.status(500).send("Erro interno ao atualizar o tokenValidado");
     }
   } else {
-    res.send("codigoValidacao inválido ou não corresponde ao usuário");
+    res.status(401).send("Token inválido");
   }
 });
 
@@ -753,7 +758,8 @@ app.get("/pagina-horario", (req, res) => {
         // Verifique se o cliente está bloqueado
         if (bloqueado) {
           // Se bloqueado, não mude disp e informe o cliente
-          return res.send('Voce esta Bloqueado, não pode fazer agendamentos de horarios')
+          return res.redirect('/bloqueado')
+          
         } else {
           // Se não estiver bloqueado, tente atualizar o horário
           const queryResult = await db.query(
