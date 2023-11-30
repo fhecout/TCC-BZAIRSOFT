@@ -1,4 +1,8 @@
 /* Estilo para o modal */
+body {
+    height: 100%;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -28,13 +32,13 @@
     z-index: 9998;
 }
 
+
 .formulario {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background-color: #292929;
 }
 
 form {
@@ -43,8 +47,54 @@ form {
     gap: 10px;
 }
 
-button {
+h1 {
+    color: var(--cor-branca);
+}
+
+.instrucao ul li {
+    color: var(--cor-branca);
+    margin-top: 10px;
+}
+
+.btn-buscar {
     padding: 5px 10px;
+    border-radius: 10px;
+    background-color: var(--cor-acizentada);
+    color: var(--cor-laranja);
+    border: 1px solid #ff7300;
+    transition: 0.3s linear;
+}
+
+.btn-buscar:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #ff7300;
+}
+
+#dia {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+}
+
+label {
+    font-size: 20px;
+}
+
+#horarios {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 50%;
+}
+
+button {
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    gap: 20px;
+    margin: 5px;
     border-radius: 10px;
     background-color: var(--cor-acizentada);
     color: var(--cor-laranja);

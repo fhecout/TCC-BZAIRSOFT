@@ -5,29 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Horários Disponíveis</title>
 
-    <link rel="stylesheet" href="../css/style-horarios.css">
     <link rel="stylesheet" href="../css/style-headerAgendamento.css">
+    <link rel="stylesheet" href="../css/style-horarios.css">
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/popUp.css">
 
-
+    
+    <link rel="shortcut icon" type="imagex/png" href="../images/icone.ico">
 </head>
 <body>
     <header>
-        <a href="../../index.html">
+        <a href="user.html">
             <img src="../images/Logo.png" alt="Logo">
         </a>
 
-        <a href="login.html">
-            Voltar para página incial
+        <a href="user.html">
+            Voltar para página inicial
         </a>
     </header>
     <div class="formulario">
         <form id="form" method="POST" action="/horarios.html">
             <label>Dia: <input type="date" name="dia" id="dia"></label>
-            <button type="submit">Buscar</button>
+            <button type="submit" class="btn-buscar">Buscar</button>
         </form>
+        <div class="instrucao">
+            <h3>Passos para agendar seu horário:</h3>
+            <ul>
+                <li>Selecione a data que deseja</li>
+                <li>Verifique os horários disponíveis e selecione uma opção</li>
+                <li>Verifique se os seus dados estão corretos</li>
+                <li>Escaneie o QRCode Disponível ou copie através do botão para pagamento em seu banco</li>
+                <li>Envie o comprovante do pagamento para o Whatsapp do campo</li>
+                <li>Clique em "Agendar Horário" e aguarde a confirmação do campo</li>
+                <li>Para qualquer dúvida sobre o status do horário, consulte o mesmo na página "Horários Agendados" na página inicial</li>
+            </ul>
+        </div>
         <div id="horarios"></div>
     </div>
 

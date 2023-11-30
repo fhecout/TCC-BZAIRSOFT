@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/popUp.css">
+
+    <link rel="shortcut icon" type="imagex/png" href="../images/icone.ico">
     
 </head>
 <body>
@@ -17,76 +19,15 @@
             <img src="../images/Logo.png" alt="Logo">
         </a>
 
-        <a href="../">
+        <a href="../HTML/login.html">
             Voltar para página incial
         </a>
     </header>
 
     <h1>Página de Administração</h1>
-    
     <div class="container">
-        <h2>Adicionar Horário</h2>
-    <form action="/adicionar-horario" method="post">
-        <label for="dia">Dia:</label>
-        <input type="date" id="dia" name="dia" required>
-
-        <label for="horario">Horário:</label>
-        <input type="time" id="horario" name="horario" required>
-
-        <label for="valor">Valor:</label>
-        <input type="number" id="valor" name="valor" required>
-
-        <button type="submit">Adicionar</button>
-    </form>
-
-    <h2>Bloquear Horario para jogador</h2>
-    <form id="bloquear-horario-form" action="/bloquear-horario-Jogador" method="post">
-        <label for="dia">Dia:</label>
-        <input type="date" id="dia" name="dia" required>
-
-        <label for="horario">Horário:</label>
-        <input type="time" id="horario" name="horario" required>
-
-        <label for="CPF">CPF do jogador que agendou o horario</label>
-        <input type="text" id="CPF" name="CPF">
-
-        <label for="observacao">Observação</label>
-        <input type="text" id="observacao" name="observacao">
-
-        <button type="button" id="exibir-senha">Bloquear Horario para jogador</button>
-
-        <div id="senha-container" style="display: none;">
-            <label for="senha">Senha de Admin:</label>
-            <input type="password" id="senha" name="senha">
-            <button type="submit">Validar Senha e Bloquear Horario</button>
-        </div>
-    </form>
-    
-    <h2>Gerar Relatório Excel</h2>
-    <form action="/gerar-relatorio-excel" method="post">
-        <label for="filtro">Filtrar do dia:</label>
-        <input type="date" id="filtroInicial" name="filtroInicial">
-
-        <label for="filtro">Filtrar ate o dia:</label>
-        <input type="date" id="filtroFinal" name="filtroFinal">
-
-        <button type="submit">Gerar Relatório</button>
-    </form>
-
-    <h2>Gerar Relatório de Log Excel</h2>
-    <form action="/gerar-relatorio-log-excel" method="post">
-        <label for="filtro">Filtrar do dia:</label>
-        <input type="date" id="filtroInicial" name="filtroInicial">
-
-        <label for="filtro">Filtrar ate o dia:</label>
-        <input type="date" id="filtroFinal" name="filtroFinal">
-
-        <button type="submit">Gerar Relatório</button>
-    </form>
-
-    <h2>Clientes que estão cadastrados</h2>
-    <form action="/gerar-pdf" method="get">
-        <button type="submit">Gerar PDF e Baixar</button>
+        <a href="admHorarios.html">Horários</a>
+        <a href="relatorios.html">Relatórios</a>
     </div>
 
     <script src="../script/adm.js"></script>

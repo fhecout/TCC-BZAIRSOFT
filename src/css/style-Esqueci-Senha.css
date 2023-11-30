@@ -1,3 +1,8 @@
+body {
+    background: url('../images/arena.png');
+    background-size: cover;
+}
+
 .container {
     display: flex;
     align-items: center;
@@ -12,6 +17,8 @@
     justify-content: center;
     flex-direction: column;
     border: 1px solid #ff7300;
+    background-color: rgba(41, 41, 41, 0.90);
+    gap: 15px;
     padding: 25px;
     font-size: 20px;
 }
@@ -23,7 +30,6 @@
 }
 
 .container form button {
-    margin-top: 20px;
     transition: 0.3s ease-in;
     padding: 5px 15px;
     border-radius: 75px;

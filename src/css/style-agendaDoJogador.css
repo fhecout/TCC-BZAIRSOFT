@@ -1,3 +1,4 @@
+
 #agendados-container {
     display: flex;
     flex-wrap: wrap;
@@ -17,17 +18,30 @@
 .horario-card p {
     margin: 5px 0;
 }
+
 h1 {
     text-align: center;
 }
 #agendados-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .horario-card {
     background-color: #292929;
     color: #fff;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.horario-card p {
+    margin: 0;
 }

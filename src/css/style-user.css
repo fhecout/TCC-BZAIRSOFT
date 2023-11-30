@@ -1,0 +1,30 @@
+body {
+    
+}
+
+h1 {
+    margin: 20px;
+}
+
+.container-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.container-user a {
+    color: var(--cor-branca);
+    padding: 25px;
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+    transition: 0.3s linear;
+}
+
+.container-user a:hover {
+    color: var(--cor-branca);
+    transform: scale(1.1);
+    background-color: var(--cor-laranja);
+}

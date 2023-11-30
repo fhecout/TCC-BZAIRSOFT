@@ -48,6 +48,11 @@ app.get("/login", (req, res) => {
 });
 
 // Rota para a página de login (login.html)
+app.get("/user", (req, res) => {
+  res.sendFile(path.join(absolutePath, "html/user.html"));
+});
+
+// Rota para a página de login (login.html)
 app.get("/bloqueado", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/bloqueado.html"));
 });
@@ -337,7 +342,7 @@ app.post("/login", async (req, res) => {
     if (tokenValidado) {
       const token = gerarToken(username);
       res.cookie("token", token, { httpOnly: true });
-      res.redirect("html/horarios.html");
+      res.redirect("/user");
     } else {
       GerarCodigo(username);
       res.redirect(`html/token.html?username=${username}`);
@@ -451,7 +456,7 @@ app.post("/codigoValidacao", async (req, res) => {
       const results = await db.query(query, [codigoValidacao, username]);
       const token = gerarToken(username); // Gera um token JWT
       res.cookie("token", token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly
-      res.redirect("html/horarios.html");
+      res.redirect("html/user.html");
     } catch (error) {
       console.error("Erro ao atualizar o tokenValidado:", error);
       res.status(500).send("Erro interno ao atualizar o tokenValidado");
@@ -828,7 +833,7 @@ app.get("/perfil", async (req, res) => {
 
       // Se o token for válido, continue com a lógica da rota protegida
       fs.readFile(
-        path.join(absolutePath, "html/perfil.html"),
+        path.join(absolutePath, "HTML/perfil.html"),
         "utf8",
         (err, data) => {
           if (err) {

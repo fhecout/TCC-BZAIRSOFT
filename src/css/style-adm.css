@@ -17,12 +17,6 @@ form {
     gap: 10px;
     border: 1px solid var(--cor-laranja);
 }
-
-h2:nth-child(n + 4){
-    color: var(--cor-acizentada);
-}
-
-
 button {
     background-color: var(--cor-laranja);
     color: var(--cor-acizentada);
@@ -37,4 +31,20 @@ button:hover {
     border: 1px solid var(--cor-laranja);
     color: var(--cor-laranja);
     cursor: pointer;
+}
+
+
+.container a {
+    color: var(--cor-branca);
+    padding: 25px;
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+    transition: 0.3s linear;
+    margin: 15px;
+}
+
+.container a:hover {
+    color: var(--cor-branca);
+    transform: scale(1.1);
+    background-color: var(--cor-laranja);
 }

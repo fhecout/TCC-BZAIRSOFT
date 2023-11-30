@@ -1,3 +1,7 @@
+body {
+    height: 100%;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -30,4 +34,13 @@ input[type=submit]:hover {
     border: 1px solid var(--cor-laranja);
     color: var(--cor-laranja);
     cursor: pointer;
+}
+
+
+input {
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--cor-laranja);
+    background-color: var(--cor-acizentada);
+    color: #fff;
 }

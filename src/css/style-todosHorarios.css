@@ -1,10 +1,30 @@
+body {
+    background-color: var(--cor-acizentada);
+    color: var(--cor-laranja);
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 table {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
 }
 
-table, th, td {
-    border: 1px solid black;
+table, td {
+    border: 1px solid var(--cor-laranja);
+}
+
+td {
+    color: var(--cor-branca);
 }
 
 th, td {
@@ -13,11 +33,13 @@ th, td {
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: var(--cor-laranja);
+    color: var(--cor-acizentada);
+    border: 1px solid var(--cor-acizentada);
 }
 
 td {
-    background-color: #ffffff;
+    background-color: transparent;
 }
 
 button {
@@ -25,15 +47,18 @@ button {
 }
 
 .disp-1 {
-    background-color: #ddffdd;
+    background-color: #009000;
+    color: #000;
 }
 
 .disp-2 {
-    background-color: #ffffdd;
+    background-color: yellow;
+    color: #000;
 }
 
 .disp-3 {
-    background-color: #ffdddd;
+    background-color: red;
+    color: #000;
 }
 
 .filter-section {
@@ -91,4 +116,18 @@ button {
 
 .confirm-btn:hover {
     background-color: darkgreen;
+}
+
+button {
+    padding: 5px;
+    background-color: var(--cor-acizentada);
+    color: var(--cor-branca);
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+    transition: 0.2s ease-out;
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }

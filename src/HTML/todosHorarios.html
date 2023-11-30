@@ -4,147 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="imagex/png" href="../images/icone.ico">
     <title>Gerenciamento de Horários</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        td {
-            background-color: #ffffff;
-        }
-
-        button {
-            margin-right: 5px;
-        }
-
-        .disp-1 {
-            background-color: #ddffdd;
-        }
-
-        .disp-2 {
-            background-color: #ffffdd;
-        }
-
-        .disp-3 {
-            background-color: #ffdddd;
-        }
-
-        .filter-section {
-            margin-bottom: 15px;
-        }
-
-        .filter-section label {
-            margin-right: 10px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-        }
-
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .confirm-btn {
-            padding: 10px 20px;
-            background-color: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .confirm-btn:hover {
-            background-color: darkgreen;
-        }
-    </style>
-
+    <link rel="stylesheet" href="../css/style-todosHorarios.css">
+    <link rel="stylesheet" href="../css/style-headerAgendamento.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/popUp.css">
 </head>
 
 <body>
-    <h1>Todos os Horários</h1>
+    <header class="header">
+        <a href="admHorarios.html">
+            <img src="../images/Logo.png" alt="Logo">
+        </a>
+    
+        <a href="admHorarios.html">
+            Voltar para página incial
+        </a>
+    </header>
+    <div class="container">
+        <h1>Todos os Horários</h1>
 
-    <div class="filter-section">
-        <label for="filtroDisponibilidade">Filtrar por Disponibilidade:</label>
-        <select id="filtroDisponibilidade">
-            <option value="todos">Todos</option>
-            <option value="1">Disponível</option>
-            <option value="2">Pendente</option>
-            <option value="3">Indisponível</option>
-        </select>
-    </div>
-    <div class="filter-section">
-        <label for="filtroData">Filtrar por Data:</label>
-        <input type="date" id="filtroData">
+        <div class="filter-section">
+            <label for="filtroDisponibilidade">Filtrar por Disponibilidade:</label>
+            <select id="filtroDisponibilidade">
+                <option value="todos">Todos</option>
+                <option value="1">Disponível</option>
+                <option value="2">Pendente</option>
+                <option value="3">Indisponível</option>
+            </select>
+        </div>
+        <div class="filter-section">
+            <label for="filtroData">Filtrar por Data:</label>
+            <input type="date" id="filtroData">
+        </div>
     </div>
 
-    <table id="horariosTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Disponibilidade</th>
-                <th>CPF do Cliente</th>
-                <th>Nome do Cliente</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Os horários serão carregados aqui pelo JavaScript -->
-        </tbody>
-    </table>
+    <div class="container-table">
+        <table id="horariosTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Disponibilidade</th>
+                    <th>CPF do Cliente</th>
+                    <th>Nome do Cliente</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os horários serão carregados aqui pelo JavaScript -->
+            </tbody>
+        </table>
+    </div>
 
 
     <!-- Modais para cada ação -->
@@ -186,184 +101,7 @@
         </div>
     </div>
 
-    <script>
-        let horarios = []; // Variável global para armazenar os horários
-
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchHorarios();
-
-            document.getElementById('filtroDisponibilidade').addEventListener('change', function () {
-                applyFilters();
-            });
-
-            document.getElementById('filtroData').addEventListener('change', function () {
-                applyFilters();
-            });
-
-            async function fetchHorarios() {
-                const response = await fetch('/todosHorarios');
-                horarios = await response.json();
-                applyFilters();
-            }
-
-            function formatDate(isoString) {
-                const date = new Date(isoString);
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Janeiro é 0!
-                const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
-            }
-
-            function compareDates(inputDateString, horarioDateString) {
-                // Primeiro, transforma a data do input em um objeto Date
-                const inputDateParts = inputDateString.split('-');
-                const inputDate = new Date(inputDateParts[0], inputDateParts[1] - 1, inputDateParts[2]);
-
-                // Transforma a data do horário (em formato ISO) em um objeto Date
-                const horarioDate = new Date(horarioDateString);
-
-                // Compara se as datas são iguais
-                return inputDate.getTime() === horarioDate.getTime();
-            }
-
-            function applyFilters() {
-                const disponibilidadeFiltro = document.getElementById('filtroDisponibilidade').value;
-                const dataFiltro = document.getElementById('filtroData').value;
-                const filteredHorarios = horarios.filter(horario => {
-                    const matchesDisponibilidade = disponibilidadeFiltro === 'todos' || horario.disp.toString() === disponibilidadeFiltro;
-                    const matchesData = !dataFiltro || compareDates(dataFiltro, horario.dia);
-                    return matchesDisponibilidade && matchesData;
-                });
-                populateTable(filteredHorarios);
-            }
-
-            function populateTable(horarios) {
-                const tableBody = document.getElementById('horariosTable').querySelector('tbody');
-                tableBody.innerHTML = '';
-                horarios.forEach(horario => {
-                    const disponibilidadeTexto = getDisponibilidadeTexto(horario.disp);
-                    const row = tableBody.insertRow();
-                    row.innerHTML = `
-                    <td>${horario.id}</td>
-                    <td>${formatDate(horario.dia)}</td>
-                    <td>${horario.horario}</td>
-                    <td class="${'disp-' + horario.disp}">${disponibilidadeTexto}</td>
-                    <td>${horario.cliente_cpf || ''}</td>
-                    <td>${horario.cliente_nome || ''}</td>
-
-                        <td>
-                            <button onclick="handleAction('bloquear', ${horario.id})">Bloquear</button>
-                            <button onclick="handleAction('agendar', ${horario.id})">Agendar</button>
-                            <button onclick="handleAction('liberar', ${horario.id})">Liberar</button>
-                            <button onclick="handleAction('desmarcar', ${horario.id})">Desmarcar</button>
-                        </td>
-                    `;
-                });
-            }
-        });
-
-
-        function getDisponibilidadeTexto(disp) {
-            switch (disp) {
-                case 1: return 'Disponível';
-                case 2: return 'Em Análise';
-                case 3: return 'Bloqueado';
-                default: return '';
-            }
-        }
-
-        let currentId = null;
-
-        function handleAction(action, id) {
-            function handleAction(action, id, clienteCpf) {
-                if (action === 'bloquear' && clienteCpf) {
-                    // Não fazer nada se o cliente_cpf estiver presente
-                    return;
-                }
-                currentId = id;
-                showModal(`modal${capitalizeFirstLetter(action)}`);
-            }
-
-            currentId = id;
-            showModal(`modal${capitalizeFirstLetter(action)}`);
-        }
-
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = "block";
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        function showNotification(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            toast.classList.add('show');
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-
-        async function executeAction(action) {
-        closeModal(`modal${capitalizeFirstLetter(action)}`);
-        let endpoint = '';
-        let actionMessage = '';
-        switch (action) {
-            case 'bloquear':
-                endpoint = '/bloquear-horarios';
-                actionMessage = 'Horário bloqueado com sucesso!';
-                break;
-            case 'agendar':
-                endpoint = '/agendar-horario';
-                actionMessage = 'Horário agendado com sucesso!';
-                break;
-            case 'liberar':
-                endpoint = '/liberarHorarios';
-                actionMessage = 'Horário liberado com sucesso!';
-                break;
-            case 'desmarcar':
-                endpoint = '/desmarcar-horario';
-                actionMessage = 'Horário desmarcado com sucesso!';
-                break;
-        }
-
-        // Armazenar a mensagem para ser exibida após o recarregamento
-        localStorage.setItem('actionMessage', actionMessage);
-
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ horarioId: currentId }),
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            window.location.reload(true);
-        } else {
-            alert('Ação falhou: ' + (result.message || 'Erro desconhecido'));
-        }
-    }
-
-    // Verificar e exibir a mensagem de notificação após recarregar a página
-    document.addEventListener('DOMContentLoaded', () => {
-        const actionMessage = localStorage.getItem('actionMessage');
-        if (actionMessage) {
-            showNotification(actionMessage);
-            localStorage.removeItem('actionMessage');
-        }
-
-        fetchHorarios();
-    });
-    </script>
+    <script src="../script/todosHorarios.js"></script>
 </body>
 
 </html>

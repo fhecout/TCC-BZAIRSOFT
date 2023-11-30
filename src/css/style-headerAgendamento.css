@@ -1,6 +1,5 @@
 body {
-    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
-    background-size: cover;
+    background-color: var(--cor-acizentada);
     height: 100vh;
     color: #FF7300;
     text-align: center;
@@ -11,7 +10,7 @@ header {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    gap: 25px;
+    column-gap: 100px;
 }
 
 header a:nth-child(2){

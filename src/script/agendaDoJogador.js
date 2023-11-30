@@ -42,6 +42,7 @@ function renderAgendados(agendados) {
             <p><strong>Status:</strong> ${statusText}</p>
             <p><strong>CPF:</strong> ${agendado.cliente_cpf}</p>
         `;
+        console.log(agendado.dia);
         container.appendChild(card);
     });
 }

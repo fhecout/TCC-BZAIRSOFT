@@ -1,3 +1,4 @@
+
 let horarios = []; // Variável global para armazenar os horários
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -111,38 +112,66 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = "none";
 }
 
-async function executeAction(action) {
-    closeModal(`modal${capitalizeFirstLetter(action)}`);
-    let endpoint = '';
-    switch (action) {
-        case 'bloquear':
-            endpoint = '/bloquear-horarios';
-            window.location.reload(true);
-            break;
-        case 'agendar':
-            endpoint = '/agendar-horario';
-            window.location.reload(true);
-            break;
-        case 'liberar':
-            endpoint = '/liberarHorarios';
-            window.location.reload(true);
-            break;
-        case 'desmarcar':
-            endpoint = '/desmarcar-horario';
-            window.location.reload(true);
-            break;
-    }
+function showNotification(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    toast.classList.add('show');
 
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ horarioId: currentId }),
-    });
-
-    const result = await response.json();
-    if (result.success) {
-        fetchHorarios();
-    } else {
-        alert('Ação falhou: ' + (result.message || 'Erro desconhecido'));
-    }
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
+
+
+async function executeAction(action) {
+closeModal(`modal${capitalizeFirstLetter(action)}`);
+let endpoint = '';
+let actionMessage = '';
+switch (action) {
+    case 'bloquear':
+        endpoint = '/bloquear-horarios';
+        actionMessage = 'Horário bloqueado com sucesso!';
+        break;
+    case 'agendar':
+        endpoint = '/agendar-horario';
+        actionMessage = 'Horário agendado com sucesso!';
+        break;
+    case 'liberar':
+        endpoint = '/liberarHorarios';
+        actionMessage = 'Horário liberado com sucesso!';
+        break;
+    case 'desmarcar':
+        endpoint = '/desmarcar-horario';
+        actionMessage = 'Horário desmarcado com sucesso!';
+        break;
+}
+
+// Armazenar a mensagem para ser exibida após o recarregamento
+localStorage.setItem('actionMessage', actionMessage);
+
+const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ horarioId: currentId }),
+});
+
+const result = await response.json();
+if (result.success) {
+    window.location.reload(true);
+} else {
+    alert('Ação falhou: ' + (result.message || 'Erro desconhecido'));
+}
+}
+
+// Verificar e exibir a mensagem de notificação após recarregar a página
+document.addEventListener('DOMContentLoaded', () => {
+const actionMessage = localStorage.getItem('actionMessage');
+if (actionMessage) {
+    showNotification(actionMessage);
+    localStorage.removeItem('actionMessage');
+}
+
+fetchHorarios();
+});

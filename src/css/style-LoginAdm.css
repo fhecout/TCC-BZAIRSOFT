@@ -1,3 +1,8 @@
+body {
+    background: url('../images/premium.jpg');
+    background-size: cover;
+}
+
 .container {
     display: flex;
     align-items: center;
@@ -11,7 +16,7 @@
     width: 400px;
     height: 500px;
     border: 1px solid #FF7300;
-    background: rgba(41, 41, 41, 0.80);
+    background: rgba(41, 41, 41, 0.90);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,11 +26,36 @@
     gap: 10px;
 }
 
+form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+i {
+    font-size: 12px;
+    color: var(--cor-laranja);
+    border-left: 1px solid #292929;
+    padding-left: 5px;
+    position: absolute;
+    bottom: 40px;
+    right: 110px;
+}
+
 .container-login input {
     border-radius: 75px;
     border: none;
     padding: 3px 15px;
     background-color: #D9D9D9;
+    text-align: center;
+    color: var(--cor-acizentada);
+}
+
+.container-login input::placeholder {
+    color: var(--cor-acizentada);
 }
 
 .container-login button {

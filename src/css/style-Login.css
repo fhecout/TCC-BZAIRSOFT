@@ -1,6 +1,6 @@
 body {
-    background: linear-gradient(180deg, #292929 40.32%, #FF7300 100%);
-    background-size: auto;
+    background: url('../images/jogosAbertosBG.png');
+    background-size: cover;
     height: 100vh;
     color: #FF7300;
 }
@@ -9,7 +9,11 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #292929;
+}
+
+.header a img {
+    width: 300px;
+    height: 300px;
 }
 
 .container {
@@ -33,7 +37,7 @@ header {
     width: 400px;
     height: 500px;
     border: 1px solid #FF7300;
-    background: rgba(41, 41, 41, 0.80);
+    background: rgba(41, 41, 41, 0.90);
 }
 
 .container-infos, .container-login {
@@ -102,12 +106,30 @@ header {
     transition: 0.3s ease-in;
 }
 
-.container-infos a:hover, .container-login a:hover {
+.container-infos a:hover, .container-login a:hover, .adm:hover {
     color: #ff7300;
 }
 
 .container-login .botao-cadastro{
     display: none;
+}
+
+.adm {
+    transition: 0.3s ease-in;
+}
+
+.container-login form {
+    position: relative;
+}
+
+i {
+    font-size: 12px;
+    color: var(--cor-laranja);
+    border-left: 1px solid #292929;
+    padding-left: 5px;
+    position: absolute;
+    top: 43.7px;
+    right: 10px;
 }
 
 @media(max-width: 900px){

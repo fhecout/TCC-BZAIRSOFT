@@ -1,3 +1,5 @@
+// const e = require("express");
+
 function formatCPF(cpf) {
     return cpf.replace(/\D/g, '')
     .replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
@@ -29,4 +31,42 @@ cpfInput.addEventListener('input', () => {
 
 
 
+// Função para mostrar um pop-up
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    toast.classList.add("show");
+  
+    // Remover o pop-up após 3 segundos
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+}
+
+const inputsCadastro = document.querySelectorAll('input')
+const buttonCadastro = document.getElementById('buttonCadastro')
+console.log(inputsCadastro);
+// console.log(buttonCadastro);
+const tiposInput = [" Nome"," CPF", " E-Mail", " Telefone", " Senha"]
+const inputsVazios = []
+
+
+
+// console.log(`Os campos:${inputsVazios} não foram preenchidos!`);
+
+
+// buttonCadastro.addEventListener('click', (event) => {
+//     for(let i = 0; i < inputsCadastro.length; i++){       
+//         if(inputsCadastro[i].value === ""){
+//             inputsVazios.push(tiposInput[i])
+//         }
+//     }
+    
+//     if(inputsVazios.length > 0){
+//         event.preventDefault()
+//         showToast(`Os campos:${inputsVazios} não foram preenchidos!`)
+//     }
+// })
 

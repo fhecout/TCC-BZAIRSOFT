@@ -1,3 +1,8 @@
+body {
+    background-color: var(--cor-acizentada);
+    color: var(--cor-branca);
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -8,21 +13,28 @@
 table {
     width: 45%;
     border-collapse: collapse;
+    border: 1px solid var(--cor-laranja);
 }
 
 th, td {
     text-align: left;
     padding: 8px;
+    border: 1px solid var(--cor-laranja);
+}
+
+h1, p {
+    color: var(--cor-laranja);
 }
 
 th {
     background-color: var(--cor-acizentada);
     border: 1px solid var(--cor-laranja);
-    color: white;
+    color: var(--cor-laranja);
 }
 
 tr:hover {
-    background-color: #ddd;
+    background-color: #555555;
+    color: var(--cor-branca);
     cursor: pointer;
 }
 
@@ -31,4 +43,6 @@ tr:hover {
     padding: 8px;
     font-size: 16px;
     width: 300px;
+    border-radius: 10px;
+    border: none;
 }
