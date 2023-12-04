@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,32 +14,36 @@
     <link rel="shortcut icon" type="imagex/png" href="../images/icone.ico">
 
 </head>
+
 <body>
     <header>
-        <a href="user.html">
+        <a href="/user">
             <img src="../images/Logo.png" alt="Logo">
         </a>
 
-        <a href="user.html">
+        <a href="/user">
             Voltar para página inicial
         </a>
     </header>
     <div class="container">
-        <h1>Perfil do Usuário</h1>
-        <div class="infos-user">
-            <label for="nome">Nome:</label>
-            <div class="nome"></div>
-            
-            <label for="email">Email:</label>
-            <div class="email"></div>
+        <form action="/perfil" method="get">
+            <h1>Perfil do Usuário</h1>
+            <div class="infos-user">
+                <label for="nome">Nome:</label>
+                <div class="nome"></div>
 
-            <label for="telefone">Telefone:</label>
-            <div class="telefone"></div>
+                <label for="email">Email:</label>
+                <div class="email"></div>
 
-            <label for="CPF">CPF:</label>
-            <div class="CPF"></div>
-        </div>
-        <a href="atualizarPerfil.html">Editar Perfil</a>
+                <label for="telefone">Telefone:</label>
+                <div class="telefone"></div>
+
+                <label for="CPF">CPF:</label>
+                <div class="CPF"></div>
+            </div>
+        </form>
+        <a href="/atualizarPerfil">Editar Perfil</a>
     </div>
 </body>
+
 </html>

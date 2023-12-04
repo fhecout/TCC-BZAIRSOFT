@@ -7,14 +7,27 @@ const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const ExcelJS = require("exceljs");
 const { verificarUsuario, verificaSenha } = require("../../auth/authLogin");
-const { VerificaCadastro, cadastrarUsuario, VerificaEmail, EnviarToken, GerarCodigo, } = require("../../auth/authCadastro");
+const {
+  VerificaCadastro,
+  cadastrarUsuario,
+  VerificaEmail,
+  EnviarToken,
+  GerarCodigo,
+} = require("../../auth/authCadastro");
 const { VerificaCodigoValidacao } = require("../../auth/authToken");
-const { enviarSenha, enviarEmailComToken, enviarEmailDesmarcar } = require("../../email/email");
+const {
+  enviarSenha,
+  enviarEmailComToken,
+  enviarEmailDesmarcar,
+} = require("../../email/email");
 const { generatePDF } = require("../../pdfs/pdf");
 const { verificaAdministrador } = require("../../auth/authLoginADM");
 const db = require("../../db/bd");
 const { log } = require("console");
-const cron = require('node-cron');
+const cron = require("node-cron");
+
+
+
 
 // Definindo o caminho absoluto para a pasta "TCC-BZAIRSOFT"
 const absolutePath = path.join(__dirname, "../../../TCC-BZAIRSOFT/src");
@@ -32,6 +45,15 @@ function gerarToken(username, cpf) {
   return token;
 }
 
+function formatarData(data) {
+  const dataObj = new Date(data);
+  const dia = String(dataObj.getDate()).padStart(2, '0');
+  const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+  const ano = dataObj.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
+
 // Rota para a página inicial (index.html)
 app.get("/", (req, res) => {
   res.sendFile(path.join(absolutePath, "index.html"));
@@ -48,40 +70,18 @@ app.get("/login", (req, res) => {
 });
 
 // Rota para a página de login (login.html)
-app.get("/user", (req, res) => {
-  res.sendFile(path.join(absolutePath, "html/user.html"));
-});
-
-// Rota para a página de login (login.html)
 app.get("/bloqueado", (req, res) => {
   res.sendFile(path.join(absolutePath, "html/bloqueado.html"));
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Rota para a página de teste depois do login (teste.html)
-app.get("/teste", async (req, res) => {
+// Rota para a página de atualização de perfil
+app.get("/atualizarPerfil", async (req, res) => {
   const token = req.cookies.token; // Obtenha o token do cookie
 
   if (!token) {
     return res.redirect("/login"); // Redirecione para a página de login se o token não estiver presente
   }
+
   jwt.verify(token, "BZAirsoftArenaTCC", async (err, decoded) => {
     // Verifique o token
     if (err) {
@@ -90,50 +90,47 @@ app.get("/teste", async (req, res) => {
     const username = decoded.username;
     try {
       const results = await db.query(
-        "SELECT nome FROM usuarios WHERE email = $1",
+        "SELECT nome, email, telefone FROM usuarios WHERE email = $1",
         [username]
       );
       const nome = results.rows[0].nome;
+      const email = results.rows[0].email;
+      const telefone = results.rows[0].telefone;
       // Se o token for válido, continue com a lógica da rota protegida
       fs.readFile(
-        path.join(absolutePath, "html/teste.html"),
+        path.join(__dirname, "../HTML/atualizarPerfil.html"),
         "utf8",
         (err, data) => {
           if (err) {
             return res.status(500).send("Erro ao ler o arquivo HTML");
           }
-          const newData = data.replace(
-            '<div class="usuario"></div>',
-            `<div class="usuario">${nome}</div>`
-          );
+          const newData = data
+            .replace(
+              '<input type="text" id="nome" name="nome" value="InputNome">',
+              `<input type="text" id="nome" name="nome" value="${nome}">`
+            )
+            .replace(
+              '<input type="email" id="email" name="email" value="InputEmail">',
+              `<input type="email" id="email" name="email" value="${email}">`
+            )
+            .replace(
+              '<input type="text" id="telefone" name="telefone" value="InputTelefone">',
+              `<input type="text" id="telefone" name="telefone" value="${telefone}">`
+            );
           res.send(newData);
         }
       );
     } catch (error) {
-      console.error("Erro ao buscar nome de usuário no banco de dados:", error);
+      console.error(
+        "Erro ao buscar informações do usuário no banco de dados:",
+        error
+      );
       return res
         .status(500)
-        .send("Erro ao buscar nome de usuário no banco de dados");
+        .send("Erro ao buscar informações do usuário no banco de dados");
     }
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get("/codigoValidacao", (req, res) => {
   const username = req.query.username;
@@ -142,21 +139,6 @@ app.get("/codigoValidacao", (req, res) => {
     codigoValidacao,
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get("/adm", (req, res) => {
   res.render(path.join(absolutePath, "html/adm.html"));
@@ -187,47 +169,15 @@ app.get("/gerar-pdf", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
 app.get("/logout", (req, res) => {
   res.clearCookie("token"); // Remova o cookie de token
   res.redirect("/login"); // Redirecione o usuário de volta para a página de login
 });
 
-
-
-
-
-
-
 // Rota para servir o arquivo tabela.html
 app.get("/tabela.html", (req, res) => {
   res.sendFile(path.join(absolutePath, "tabela.html"));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get("/horarios", async (req, res) => {
   try {
@@ -289,16 +239,6 @@ app.get("/horarios", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
 app.post("/cadastro", async (req, res) => {
   const { username, senha, nome, cpf, telefone } = req.body;
   const CadastroExiste = await VerificaCadastro(cpf, username);
@@ -309,23 +249,6 @@ app.post("/cadastro", async (req, res) => {
     res.redirect(`html/token.html?username=${username}`);
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -352,16 +275,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
 app.post("/loginAdm", async (req, res) => {
   const { username, senha } = req.body;
 
@@ -373,18 +286,6 @@ app.post("/loginAdm", async (req, res) => {
     res.send("Usuário inválido.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.post("/esqueceuSenha", async (req, res) => {
   const { username } = req.body;
@@ -428,19 +329,6 @@ app.post("/esqueceuSenha", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post("/codigoValidacao", async (req, res) => {
   const { codigoValidacao, username } = req.body;
 
@@ -456,7 +344,7 @@ app.post("/codigoValidacao", async (req, res) => {
       const results = await db.query(query, [codigoValidacao, username]);
       const token = gerarToken(username); // Gera um token JWT
       res.cookie("token", token, { httpOnly: true }); // Configuramdo o token como um cookie seguro e httpOnly
-      res.redirect("html/user.html");
+      res.redirect("/user");
     } catch (error) {
       console.error("Erro ao atualizar o tokenValidado:", error);
       res.status(500).send("Erro interno ao atualizar o tokenValidado");
@@ -466,27 +354,8 @@ app.post("/codigoValidacao", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post("/AgendadorJogador", async (req, res) => {
-  const token = req.cookies.token; 
+  const token = req.cookies.token;
 
   if (!token) {
     return res.status(401).send("Token não fornecido.");
@@ -518,26 +387,17 @@ app.post("/AgendadorJogador", async (req, res) => {
       [userId]
     );
 
-    const agendados = result.rows;
+    const agendados = result.rows.map((item) => {
+      // Formate a data aqui
+      item.dia = formatarData(item.dia);
+      return item;
+    });
 
-  res.json({
-    agendados,
+    res.json({
+      agendados,
+    });
   });
 });
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.post("/horarios", async (req, res) => {
   const { dia } = req.body;
@@ -557,7 +417,6 @@ app.post("/horarios", async (req, res) => {
     mensagem = "INSIRA UMA DATA MAIOR QUE A ATUAL";
   }
 
-
   const result = await db.query(
     "SELECT id, horario FROM horarios_disponiveis WHERE dia = $1 and disp=1",
     [dia]
@@ -566,26 +425,10 @@ app.post("/horarios", async (req, res) => {
   const horarios = result.rows;
 
   res.json({
-    horarios, mensagem
+    horarios,
+    mensagem,
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get("/pagina-horario", (req, res) => {
   const horarioId = req.query.id;
@@ -608,7 +451,6 @@ app.get("/pagina-horario", (req, res) => {
 
     const userNome = Usuario.rows[0].nome;
     const userCPF = Usuario.rows[0].cpf;
-
 
     if (Usuario.rowCount === 0) {
       return res.status(404).send("Usuário não encontrado.");
@@ -696,15 +538,19 @@ app.get("/pagina-horario", (req, res) => {
                         '<div class="status-horario">Status desconhecido</div>';
                   }
 
-
-
                   const finalHtml = id.replace(
                     "Status do horário será inserido aqui",
                     statusHtml
                   );
 
-                  const nomeUsuario = finalHtml.replace('<div class="nome">Nome:</div>', `<div class="nome">Nome:${userNome}</div>`)
-                  const CPFUsuario = nomeUsuario.replace('<div class="cpf">CPF:</div>', `<div class="cpf">CPF:${userCPF}</div>`)
+                  const nomeUsuario = finalHtml.replace(
+                    '<div class="nome">Nome:</div>',
+                    `<div class="nome">Nome:${userNome}</div>`
+                  );
+                  const CPFUsuario = nomeUsuario.replace(
+                    '<div class="cpf">CPF:</div>',
+                    `<div class="cpf">CPF:${userCPF}</div>`
+                  );
 
                   res.send(CPFUsuario);
                 } else {
@@ -721,15 +567,6 @@ app.get("/pagina-horario", (req, res) => {
         res.status(500).send("Erro ao buscar informações do horário");
       });
   });
-
-
-
-
-
-
-
-
-
 
   app.post("/agendar", async (req, res) => {
     const { horarioId } = req.body;
@@ -763,8 +600,7 @@ app.get("/pagina-horario", (req, res) => {
         // Verifique se o cliente está bloqueado
         if (bloqueado) {
           // Se bloqueado, não mude disp e informe o cliente
-          return res.redirect('/bloqueado')
-          
+          return res.redirect("/bloqueado");
         } else {
           // Se não estiver bloqueado, tente atualizar o horário
           const queryResult = await db.query(
@@ -782,11 +618,7 @@ app.get("/pagina-horario", (req, res) => {
             );
             return res.redirect(`/pagina-horario?id=${horarioId}`);
           } else {
-            return res
-              .status(404)
-              .send(
-                "Horário não encontrado ou já reservado. Não foi possível bloquear o horário."
-              );
+            res.redirect('html/AgendadoJogador.html')
           }
         }
       } catch (error) {
@@ -796,20 +628,8 @@ app.get("/pagina-horario", (req, res) => {
           .send("Erro interno do servidor ao bloquear o horário.");
       }
     });
-  })
+  });
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Rota para a página de perfil do usuário
 app.get("/perfil", async (req, res) => {
@@ -871,20 +691,52 @@ app.get("/perfil", async (req, res) => {
   });
 });
 
+// Rota para a página de perfil do usuário
+app.get("/User", async (req, res) => {
+  const token = req.cookies.token; // Obtenha o token do cookie
 
+  if (!token) {
+    return res.redirect("/login"); // Redirecione para a página de login se o token não estiver presente
+  }
+  jwt.verify(token, "BZAirsoftArenaTCC", async (err, decoded) => {
+    // Verifique o token
+    if (err) {
+      return res.redirect("/login"); // Redirecione para a página de login se o token for inválido
+    }
+    const username = decoded.username;
+    try {
+      const results = await db.query(
+        "SELECT nome FROM usuarios WHERE email = $1",
+        [username]
+      );
+      const { nome } = results.rows[0];
 
-
-
-
-
-
-
-
-
-
-
-
-
+      // Se o token for válido, continue com a lógica da rota protegida
+      fs.readFile(
+        path.join(absolutePath, "HTML/user.html"),
+        "utf8",
+        (err, data) => {
+          if (err) {
+            return res.status(500).send("Erro ao ler o arquivo HTML");
+          }
+          const newData = data.replace(
+            "<h1>Seja Bem-vindo(a) <span>nome Usuario</span>!</h1>",
+            `<h1>Seja Bem-vindo(a) <span>${nome}</span>!</h1>`
+          );
+          res.send(newData);
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Erro ao buscar informações do usuário no banco de dados:",
+        error
+      );
+      return res
+        .status(500)
+        .send("Erro ao buscar informações do usuário no banco de dados");
+    }
+  });
+});
 
 // Rota para atualizar as informações do usuário
 app.post("/atualizar-perfil", async (req, res) => {
@@ -907,11 +759,19 @@ app.post("/atualizar-perfil", async (req, res) => {
       const senhaCorreta = await verificaSenha(username, senha);
 
       if (senhaCorreta) {
-        const emailJaExiste = await VerificaCadastro(null, email);
-        if (emailJaExiste) {
-          return res
-            .status(400)
-            .send("O e-mail já está em uso. Por favor, escolha outro e-mail.");
+        if (!nome || !email || !telefone || !senha) {
+          return res.status(400).send("Todos os campos são obrigatórios.");
+        }
+        // Verificar se o novo e-mail é diferente do e-mail atual
+        if (email !== username) {
+          const emailJaExiste = await select(null, email);
+          if (emailJaExiste) {
+            return res
+              .status(400)
+              .send(
+                "O e-mail já está em uso. Por favor, escolha outro e-mail."
+              );
+          }
         }
 
         await db.query(
@@ -931,19 +791,7 @@ app.post("/atualizar-perfil", async (req, res) => {
   });
 });
 
-
-
-
-app.get("/atualizarPerfil", (req, res) => {
-  res.sendFile(path.join(absolutePath, "html/atualizarPerfil.html"));
-});
-
-
-
-
 //ADMINISTRAÇÃO
-
-
 
 app.post("/gerar-pdf", async (req, res) => {
   try {
@@ -958,25 +806,6 @@ app.post("/gerar-pdf", async (req, res) => {
     res.status(500).send("Erro ao gerar PDF.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Rota para adicionar horários
 app.post("/adicionar-horario", async (req, res) => {
@@ -1014,63 +843,45 @@ app.post("/adicionar-horario", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.post('/bloquear-horario-Jogador', async (req, res) => {
+app.post("/bloquear-horario-Jogador", async (req, res) => {
   const { CPF, observacao, dia, horario, senha, comprovante } = req.body;
 
   try {
-
-    const senhaNoBanco = await db.query('SELECT * from administrador where senha = $1', [senha]);
-
+    const senhaNoBanco = await db.query(
+      "SELECT * from administrador where senha = $1",
+      [senha]
+    );
 
     if (senhaNoBanco.rows.length > 0) {
-      const result = await db.query('UPDATE horarios_disponiveis SET disp = 3, cliente_cpf = $1 WHERE  dia = $2 AND horario = $3 ', [CPF,  dia, horario]);
-      await db.query('INSERT INTO log_alteracoes (acao, observacao, dia, horario, data_hora) VALUES ($1, $2, $3, $4, NOW())', ['Bloqueio de Horário', observacao, dia, horario]);
+      // Verifique se o horário com os detalhes fornecidos existe
+      const horarioExiste = await db.query(
+        "SELECT id FROM horarios_disponiveis WHERE dia = $1 AND horario = $2",
+        [dia, horario]
+      );
+
+      if (horarioExiste.rows.length === 0) {
+        // Se o horário não existe, retorne uma mensagem de erro
+        return res.status(404).send("Horário não encontrado.");
+      }
+
+      const result = await db.query(
+        "UPDATE horarios_disponiveis SET disp = 3, cliente_cpf = $1 WHERE dia = $2 AND horario = $3 ",
+        [CPF, dia, horario]
+      );
+      await db.query(
+        "INSERT INTO log_alteracoes (acao, observacao, dia, horario, data_hora) VALUES ($1, $2, $3, $4, NOW())",
+        ["Bloqueio de Horário", observacao, dia, horario]
+      );
 
       res.send("Horário bloqueado com sucesso");
-
     } else {
-      res.status(401).send('Senha de admin incorreta.');
+      res.status(401).send("Senha de admin incorreta.");
     }
   } catch (error) {
-    console.error('Erro ao bloquear horário:', error);
-    res.status(500).send('Erro ao bloquear horário.');
+    console.error("Erro ao bloquear horário:", error);
+    res.status(500).send("Erro ao bloquear horário.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Rota para gerar relatório com filtro
@@ -1098,19 +909,6 @@ app.post("/gerar-relatorio", async (req, res) => {
     res.status(500).send("Erro ao gerar relatório.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Rota para gerar relatório em uma planilha Excel
 app.post("/gerar-relatorio-excel", async (req, res) => {
@@ -1180,17 +978,6 @@ app.post("/gerar-relatorio-excel", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
 // Rota para gerar relatório em uma planilha Excel com informações de log, dias e horários
 app.post("/gerar-relatorio-log-excel", async (req, res) => {
   const { filtroInicial, filtroFinal } = req.body;
@@ -1258,45 +1045,6 @@ app.post("/gerar-relatorio-log-excel", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.get("/horarios-agendados", async (req, res) => {
   try {
     const results = await db.query(
@@ -1324,22 +1072,6 @@ app.post("/bloquearhorario", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post("/liberarHorario", async (req, res) => {
   try {
     const horarioId = req.body.horarioId;
@@ -1352,20 +1084,6 @@ app.post("/liberarHorario", async (req, res) => {
     res.status(500).send("Erro ao Liberar horário.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // PAGINA DE CLIENTES
 
@@ -1396,15 +1114,6 @@ app.get("/cliente-detalhes/:id", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
 app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
   const idJogador = req.params.id;
   const { bloqueado } = req.body; // Isso deve ser true ou false com base no status da caixa de seleção na interface
@@ -1425,8 +1134,9 @@ app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
     }
 
     res.json({
-      mensagem: `Jogador ${bloqueado ? "bloqueado" : "desbloqueado"
-        } com sucesso!`,
+      mensagem: `Jogador ${
+        bloqueado ? "bloqueado" : "desbloqueado"
+      } com sucesso!`,
       dados: resultado.rows[0],
     });
   } catch (error) {
@@ -1436,39 +1146,6 @@ app.patch("/atualizar-bloqueio-jogador/:id", async (req, res) => {
       .json({ error: "Erro ao atualizar o status de bloqueio do jogador." });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Obter todos os horários
 app.get("/todosHorarios", async (req, res) => {
@@ -1498,23 +1175,15 @@ app.get("/todosHorarios", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
 // Bloquear horário
 app.post("/bloquear-horarios", async (req, res) => {
   try {
     const { horarioId } = req.body;
 
-    await db.query("UPDATE horarios_disponiveis SET disp = 3 WHERE id = $1 and disp = 1", [
-      horarioId,
-    ]);
+    await db.query(
+      "UPDATE horarios_disponiveis SET disp = 3 WHERE id = $1 and disp = 1",
+      [horarioId]
+    );
 
     res.json({ success: true });
   } catch (error) {
@@ -1522,18 +1191,6 @@ app.post("/bloquear-horarios", async (req, res) => {
     res.status(500).send("Erro ao liberar horário.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Agendar horário
 app.post("/agendar-horario", async (req, res) => {
@@ -1544,7 +1201,6 @@ app.post("/agendar-horario", async (req, res) => {
       "UPDATE horarios_disponiveis SET disp = 3 WHERE id = $1 and disp=2",
       [horarioId]
     );
-    
 
     res.json({ success: true });
   } catch (error) {
@@ -1553,25 +1209,14 @@ app.post("/agendar-horario", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Liberar horário
 app.post("/liberarHorarios", async (req, res) => {
   try {
     const { horarioId } = req.body;
-    await db.query("UPDATE horarios_disponiveis SET disp = 1, cliente_cpf = NULL WHERE id = $1 and disp=3 and cliente_cpf IS NULL", [horarioId]);
-
-
+    await db.query(
+      "UPDATE horarios_disponiveis SET disp = 1, cliente_cpf = NULL WHERE id = $1 and disp=3 and cliente_cpf IS NULL",
+      [horarioId]
+    );
 
     res.json({ success: true });
   } catch (error) {
@@ -1580,39 +1225,27 @@ app.post("/liberarHorarios", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Desmarcar horÃ¡rio
-app.post('/desmarcar-horario', async (req, res) => {
+app.post("/desmarcar-horario", async (req, res) => {
   try {
     const { horarioId } = req.body;
 
     // Primeiro obtenha as informaÃ§Ãµes do horÃ¡rio e do cliente
     const queryResult = await db.query(
-      'SELECT cliente_cpf, dia, horario FROM horarios_disponiveis WHERE id = $1',
+      "SELECT cliente_cpf, dia, horario FROM horarios_disponiveis WHERE id = $1",
       [horarioId]
     );
 
     if (queryResult.rows.length > 0) {
       // Desmarca o horÃ¡rio
       await db.query(
-        'UPDATE horarios_disponiveis SET cliente_cpf = NULL, disp = 1  WHERE id = $1',
+        "UPDATE horarios_disponiveis SET cliente_cpf = NULL, disp = 1  WHERE id = $1",
         [horarioId]
       );
 
       // Enviar e-mail para o cliente apÃ³s desmarcar o horÃ¡rio
       const clienteEmail = await db.query(
-        'SELECT email FROM usuarios WHERE cpf = $1',
+        "SELECT email FROM usuarios WHERE cpf = $1",
         [queryResult.rows[0].cliente_cpf]
       );
 
@@ -1622,25 +1255,13 @@ app.post('/desmarcar-horario', async (req, res) => {
 
       res.json({ success: true });
     } else {
-      res.status(404).send('HorÃ¡rio nÃ£o encontrado.');
+      res.status(404).send("HorÃ¡rio nÃ£o encontrado.");
     }
-
   } catch (error) {
-    console.error('Erro ao desmarcar horÃ¡rio:', error);
-    res.status(500).send('Erro ao desmarcar horÃ¡rio.');
+    console.error("Erro ao desmarcar horÃ¡rio:", error);
+    res.status(500).send("Erro ao desmarcar horÃ¡rio.");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 // Pagina de configuração
 
@@ -1653,13 +1274,6 @@ app.get("/HorarioDiario", async (req, res) => {
     res.status(500).send("Erro no servidor ao obter horários.");
   }
 });
-
-
-
-
-
-
-
 
 // Rota para adicionar um novo horário
 app.post("/HorarioDiario", async (req, res) => {
@@ -1674,14 +1288,6 @@ app.post("/HorarioDiario", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
 app.delete("/HorarioDiario/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -1692,44 +1298,35 @@ app.delete("/HorarioDiario/:id", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
 // Função que busca e insere horários
 async function inserirHorariosDisponiveis() {
   try {
-    const result = await db.query('SELECT * FROM horarios_configurados');
+    const result = await db.query("SELECT * FROM horarios_configurados");
     const horarios = result.rows;
     for (let horario of horarios) {
-      await db.query('INSERT INTO horarios_disponiveis (horario, dia, disp, valor) VALUES ($1, CURRENT_DATE, 1, 250)', [horario.horario]);
+      await db.query(
+        "INSERT INTO horarios_disponiveis (horario, dia, disp, valor) VALUES ($1, CURRENT_DATE, 1, 250)",
+        [horario.horario]
+      );
     }
-    console.log('Horários diários inseridos com sucesso.');
+    console.log("Horários diários inseridos com sucesso.");
   } catch (error) {
-    console.error('Erro ao inserir horários diários:', error);
+    console.error("Erro ao inserir horários diários:", error);
   }
 }
 
-
-
-
-
 // Agendar a tarefa para rodar todos os dias às 11:50 da manhã
-cron.schedule('0 0 * * *', () => {
-  console.log('Executando a tarefa de inserir horários disponíveis...');
-  inserirHorariosDisponiveis();
-}, {
-  scheduled: true,
-  timezone: "America/Sao_Paulo"
-});
-
-
-
-
-
+cron.schedule(
+  "0 0 * * *",
+  () => {
+    console.log("Executando a tarefa de inserir horários disponíveis...");
+    inserirHorariosDisponiveis();
+  },
+  {
+    scheduled: true,
+    timezone: "America/Sao_Paulo",
+  }
+);
 
 // Definindo a Rota do servidor
 app.listen(3000, () => {

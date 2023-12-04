@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
                 } else {
 
-                    window.location.href = '../HTML/user.html';
+                    window.location.href = '/user';
 
                 }
             } catch (error) {

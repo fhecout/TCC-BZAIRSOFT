@@ -46,3 +46,5 @@ function renderAgendados(agendados) {
         container.appendChild(card);
     });
 }
+
+

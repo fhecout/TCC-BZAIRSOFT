@@ -15,11 +15,11 @@
 </head>
 <body>
     <header>
-        <a href="perfil.html">
+        <a href="/perfil">
           <img src="../images/Logo.png" alt="Logo">
         </a>
 
-        <a href="perfil.html">
+        <a href="/perfil">
           Voltar para página inicial
         </a>
     </header>
@@ -28,11 +28,11 @@
         <h1>Editar Perfil</h1>
         <form action="/atualizar-perfil" method="POST">
             <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome">
+            <input type="text" id="nome" name="nome" value="InputNome">
             <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" value="InputEmail">
             <label for="telefone">Telefone:</label>
-            <input type="text" id="telefone" name="telefone">
+            <input type="text" id="telefone" name="telefone" value="InputTelefone">
             <label for="senha">Senha Atual:</label>
             <input type="password" id="senha" name="senha" required>
             <input type="submit" value="Atualizar">
