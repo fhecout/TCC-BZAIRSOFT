@@ -277,7 +277,7 @@ class PuppeteerNode extends Puppeteer_js_1.Puppeteer {
                 continue;
             }
             await (0, browsers_1.uninstall)({
-                browser: browsers_1.Browser.CHROME,
+                browser: installedBrowser.browser,
                 platform,
                 cacheDir,
                 buildId: installedBrowser.buildId,

@@ -29,6 +29,7 @@ const cron = require("node-cron");
 
 
 
+
 // Definindo o caminho absoluto para a pasta "TCC-BZAIRSOFT"
 const absolutePath = path.join(__dirname, "../../../TCC-BZAIRSOFT/src");
 
@@ -70,7 +71,7 @@ app.get("/login", (req, res) => {
 });
 
 // Rota para a página de login (login.html)
-app.get("/bloqueado", (req, res) => {
+app.get("/bloqueado", (req, res) => {   
   res.sendFile(path.join(absolutePath, "html/bloqueado.html"));
 });
 
@@ -78,7 +79,7 @@ app.get("/bloqueado", (req, res) => {
 app.get("/atualizarPerfil", async (req, res) => {
   const token = req.cookies.token; // Obtenha o token do cookie
 
-  if (!token) {
+  if (!token) { 
     return res.redirect("/login"); // Redirecione para a página de login se o token não estiver presente
   }
 
@@ -790,6 +791,68 @@ app.post("/atualizar-perfil", async (req, res) => {
     }
   });
 });
+
+
+
+
+
+// Rota para alterar a senha
+app.post("/alterarSenha", async (req, res) => {
+  const { senha_atual, nova_senha, confirma_senha } = req.body;
+  const token = req.cookies.token; // Obtenha o token do cookie
+
+  if (!token) {
+    return res.status(401).send("Token não fornecido.");
+  }
+
+  jwt.verify(token, "BZAirsoftArenaTCC", async (err, decoded) => {
+    if (err) {
+      return res.status(401).send("Token inválido.");
+    }
+
+    const username = decoded.username;
+
+    try {
+
+      const result = await db.query(
+        "SELECT senha FROM usuarios WHERE email = $1",
+        [username]
+      );
+
+
+      if (result.rowCount === 0) {
+        return res.status(404).send("Usuário não encontrado.");
+      }
+
+      const senhaNoBanco = result.rows[0].senha;
+
+      // Verifique se a senha atual coincide com a senha no banco de dados
+      if (senha_atual !== senhaNoBanco) {
+        return res.status(401).send("Senha atual incorreta.");
+      }
+
+      // Verifique se a nova senha e a confirmação coincidem
+      if (nova_senha !== confirma_senha) {
+        return res.status(400).send("A nova senha e a confirmação não coincidem.");
+      }
+ 
+      const queryResult = await db.query(
+        "UPDATE usuarios SET senha = $1 WHERE email = $2",
+        [nova_senha, username]
+      );
+      
+      res.status(200).send("Senha alterada com sucesso.");
+    } catch (error) {
+      console.error("Erro ao alterar a senha:", error);
+      return res.status(500).send("Erro interno do servidor ao alterar a senha.");
+    }
+  });
+});
+
+
+
+
+
 
 //ADMINISTRAÇÃO
 

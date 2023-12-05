@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Senha</title>
+    <link rel="stylesheet" href="../css/popUp.css">
+</head>
+<body>
+    <h1>Alterar Senha</h1>
+    <form action="/alterarSenha" method="post">
+        
+        <label for="nova_senha">Nova Senha:</label>
+        <input type="password" id="nova_senha" name="nova_senha" required>
+        <br>
+
+        <label for="confirma_senha">Confirme a Nova Senha:</label>
+        <input type="password" id="confirma_senha" name="confirma_senha" required>
+        <br>
+
+        <label for="senha_atual">Senha Atual:</label>
+        <input type="password" id="senha_atual" name="senha_atual" required>
+        <br>
+
+        <input type="submit" value="Alterar Senha">
+    </form>
+    <script src="../script/alterarSenha.js"></script>
+</body>
+</html>
