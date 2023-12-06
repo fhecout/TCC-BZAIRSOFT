@@ -22,7 +22,7 @@ const {
 } = require("../../email/email");
 const { generatePDF } = require("../../pdfs/pdf");
 const { verificaAdministrador } = require("../../auth/authLoginADM");
-const db = require("../../db/bd");
+const db = require("../../db/bd");  
 const { log } = require("console");
 const cron = require("node-cron");
 
@@ -1288,12 +1288,12 @@ app.post("/liberarHorarios", async (req, res) => {
   }
 });
 
-// Desmarcar horÃ¡rio
+// Desmarcar horario
 app.post("/desmarcar-horario", async (req, res) => {
   try {
     const { horarioId } = req.body;
 
-    // Primeiro obtenha as informaÃ§Ãµes do horÃ¡rio e do cliente
+    // Primeiro obtenha as informações do horario e do cliente
     const queryResult = await db.query(
       "SELECT cliente_cpf, dia, horario FROM horarios_disponiveis WHERE id = $1",
       [horarioId]
@@ -1306,7 +1306,7 @@ app.post("/desmarcar-horario", async (req, res) => {
         [horarioId]
       );
 
-      // Enviar e-mail para o cliente apÃ³s desmarcar o horÃ¡rio
+      // Enviar e-mail para o cliente aposs desmarcar o horario
       const clienteEmail = await db.query(
         "SELECT email FROM usuarios WHERE cpf = $1",
         [queryResult.rows[0].cliente_cpf]
@@ -1318,10 +1318,10 @@ app.post("/desmarcar-horario", async (req, res) => {
 
       res.json({ success: true });
     } else {
-      res.status(404).send("HorÃ¡rio nÃ£o encontrado.");
+      res.status(404).send("Horario nÃ£o encontrado.");
     }
   } catch (error) {
-    console.error("Erro ao desmarcar horÃ¡rio:", error);
+    console.error("Erro ao desmarcar horario:", error);
     res.status(500).send("Erro ao desmarcar horÃ¡rio.");
   }
 });
@@ -1378,6 +1378,7 @@ async function inserirHorariosDisponiveis() {
   }
 }
 
+//Os minutos vem primeiro, e depois horas.
 // Agendar a tarefa para rodar todos os dias às 11:50 da manhã
 cron.schedule(
   "0 0 * * *",
