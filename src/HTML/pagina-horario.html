@@ -20,7 +20,7 @@
         </a>
 
         <a href="/user">
-            Voltar para página incial
+            Voltar para página inicial
         </a>
     </header>
     <div class="container">
@@ -33,14 +33,9 @@
             <div class="acoes">
                 <div id="conteudo">
                 </div>
-                <div class="status-horario">Status do horário será inserido aqui</div>
+                <div class="status-horario" style="font-size: 20px;">Status do horário será inserido aqui</div>
 
-                <button id="copiarBotao">Copiar QRCode</button>
-                <a href="https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00" target="_blank">
-                    <button id="whatsapp">Enviar Whatsapp</button>
-                </a>
                 <span class="valor"></span>
-
                 <form action="/agendar" method="post">
                     <input type="hidden" name="horarioId" value="ID_DO_HORARIO_AQUI">
                     <button id="AgendarHorario">Agendar Horário</button>
@@ -48,6 +43,10 @@
                     <div class="cpf">CPF:</div>
                     <div class="valor"></div>
                 </form>
+                <button id="copiarBotao">Copiar QRCode</button>
+                <a href="https://wa.me//5541999575249?text=Agendamento%20da%20Arena:%20ID:0%20as%20H00:00" target="_blank">
+                    <button id="whatsapp">Enviar Whatsapp</button>
+                </a>
             </div>
         </div>
     </div>
