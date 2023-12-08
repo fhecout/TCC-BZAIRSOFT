@@ -5,8 +5,6 @@ function verificaAdministrador(username, senha) {
   return new Promise((resolve, reject) => {
 
     const query = 'SELECT * FROM administrador a WHERE email = $1 AND senha = $2';
-    console.log(username);
-    console.log(senha);
 
     bd.query(query, [username, senha], (err, res) => {
       if (err) {

@@ -70,3 +70,44 @@ const inputsVazios = []
 //     }
 // })
 
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000); // O pop-up será removido após 3 segundos
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formLogin = document.querySelector('form[action="/cadastro"]');
+    if (formLogin) {
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(formLogin);
+
+            try {
+                const response = await fetch('/cadastro', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                if (!response.ok) {
+                    const message = await response.text();
+                    showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
+                } else {
+                    const data = await response.json();
+                    window.location.href = `html/token.html?username=${data.username}`; // Redirecionar com o nome de usuário correto
+                }
+            } catch (error) {
+                showToast('Erro ao tentar fazer login'); // Mostrar erro se a solicitação falhar
+            }
+        });
+    }
+});
+

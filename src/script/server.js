@@ -247,7 +247,7 @@ app.post("/cadastro", async (req, res) => {
     res.status(401).send("CPF ou Email ja foram informados");
   } else {
     cadastrarUsuario(username, senha, nome, cpf, telefone);
-    res.redirect(`html/token.html?username=${username}`);
+    res.send({ username }); // Enviar nome de usuário de volta para o cliente
   }
 });
 
@@ -284,7 +284,7 @@ app.post("/loginAdm", async (req, res) => {
   if (LoginConfere) {
     res.redirect("html/adm.html");
   } else {
-    res.send("Usuário inválido.");
+    res.status(401).send("Usuário inválido."); // Enviar resposta com status de erro
   }
 });
 
