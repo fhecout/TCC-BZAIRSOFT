@@ -76,6 +76,7 @@
 
 #menu ul li a {
     padding: 20px;
+    color: var(--cor-laranja);
     border-radius: 75px;
 }
 

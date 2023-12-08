@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
                 } else {
                     
-                    showToast('Senha Alterada')
+                    showToast('Senha Alterada') 
                     
 
                 }

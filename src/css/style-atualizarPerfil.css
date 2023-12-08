@@ -44,3 +44,10 @@ input {
     background-color: var(--cor-acizentada);
     color: #fff;
 }
+
+form a {
+    color: var(--cor-laranja);
+    padding: 5px 10px;
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+}

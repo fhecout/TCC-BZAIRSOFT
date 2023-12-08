@@ -22,7 +22,7 @@ span {
     color: var(--cor-branca);
 }
 
-a:nth-child(3) {
+.container a {
     color: var(--cor-branca);
     padding: 25px;
     border: 1px solid var(--cor-laranja);
@@ -30,7 +30,7 @@ a:nth-child(3) {
     transition: 0.3s linear;
 }
 
-a:nth-child(3):hover {
+.container  a:hover {
     color: var(--cor-branca);
     transform: scale(1.1);
     background-color: var(--cor-laranja);

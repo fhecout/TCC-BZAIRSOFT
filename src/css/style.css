@@ -113,9 +113,14 @@ section {
     background: url(../images/jogosAbertosBG.png) center/cover no-repeat;
 }
 
+#jogos-abertos p  {
+    color: var(--cor-branca);
+}
+
 /* ARENA */
 #arena {
     animation: changeBackgroundColor 10s infinite;
+    color: var(--cor-branca);
 }
 
 @keyframes changeBackgroundColor {
@@ -152,6 +157,10 @@ section {
     margin-top: 5px;
 }
 
+#agendamento p {
+    color: var(--cor-branca);
+}
+
 /* RODAPÉ */
 #rodape {
     background-color: var(--cor-acizentada);
@@ -171,4 +180,8 @@ section {
 
 #rodape .endereco a img {
     border-radius: var(--borda-redonda);
+}
+
+#menu ul li a, #rodape, .contato p a, .navegacao a {
+    color: var(--cor-laranja);
 }
