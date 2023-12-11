@@ -33,7 +33,7 @@ function enviarSenha(destinatario, senha) {
     from: "feliperafaeldocouto0306@gmail.com",
     to: destinatario,
     subject: "Senha enviada por email do login da BZAirsoft",
-    text: `Sua senha é ${senha}`,
+    text: `Sua senha é: ${senha}`,
   };
 
   transporter.sendMail(mailOptionsSenha, (error, info) => {

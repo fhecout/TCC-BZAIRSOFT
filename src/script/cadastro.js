@@ -84,30 +84,30 @@ function showToast(message) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const formLogin = document.querySelector('form[action="/cadastro"]');
-    if (formLogin) {
-        formLogin.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(formLogin);
+// document.addEventListener('DOMContentLoaded', function() {
+//     const formLogin = document.querySelector('form[action="/cadastro"]');
+//     if (formLogin) {
+//         formLogin.addEventListener('submit', async (e) => {
+//             e.preventDefault();
+//             const formData = new FormData(formLogin);
 
-            try {
-                const response = await fetch('/cadastro', {
-                    method: 'POST',
-                    body: new URLSearchParams(formData)
-                });
+//             try {
+//                 const response = await fetch('/cadastro', {
+//                     method: 'POST',
+//                     body: new URLSearchParams(formData)
+//                 });
 
-                if (!response.ok) {
-                    const message = await response.text();
-                    showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
-                } else {
-                    const data = await response.json();
-                    window.location.href = `html/token.html?username=${data.username}`; // Redirecionar com o nome de usuário correto
-                }
-            } catch (error) {
-                showToast('Erro ao tentar fazer login'); // Mostrar erro se a solicitação falhar
-            }
-        });
-    }
-});
+//                 if (!response.ok) {
+//                     const message = await response.text();
+//                     showToast(message); // Mostrar o pop-up se a resposta não for bem-sucedida
+//                 } else {
+//                     const data = await response.json();
+//                     window.location.href = `html/token.html?username=${data.username}`; // Redirecionar com o nome de usuário correto
+//                 }
+//             } catch (error) {
+//                 showToast('Erro ao tentar fazer login'); // Mostrar erro se a solicitação falhar
+//             }
+//         });
+//     }
+// });
 
