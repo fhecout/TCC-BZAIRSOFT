@@ -51,6 +51,12 @@ h1 {
     color: var(--cor-branca);
 }
 
+.instrucao ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .instrucao ul li {
     color: var(--cor-branca);
     margin-top: 10px;
@@ -106,4 +112,51 @@ button:hover {
     cursor: pointer;
     color: #fff;
     background-color: #ff7300;
+}
+
+@media(max-width: 498px){
+    .instrucao ul {
+        padding-inline: 10px;
+    }
+
+    #horarios {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .modal {
+        width: 350px;
+        height: 750px;
+        border-radius: 10px;
+    }
+    
+    /* Estilo para a sobreposição escura de fundo */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
