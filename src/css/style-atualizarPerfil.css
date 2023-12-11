@@ -51,3 +51,7 @@ form a {
     border: 1px solid var(--cor-laranja);
     border-radius: 10px;
 }
+
+@media(max-width: 498px){
+    
+}

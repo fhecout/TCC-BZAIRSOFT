@@ -3,6 +3,7 @@
     background-color: var(--cor-acizentada);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding-inline: 20px;
     max-height: 5.9rem;
 }
